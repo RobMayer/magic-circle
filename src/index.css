@@ -1,13 +1,391 @@
 body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+    font-family: sans-serif;
+    font-size: 11pt;
+    background: black;
 }
 
+* {
+    user-select: none;
+}
+
+#app {
+    display: grid;
+    grid-template-columns: 4fr min-content;
+    grid-auto-columns: minmax(480px, 10vw);
+    grid-auto-flow: column;
+    height: 100vh;
+    width: 100vw;
+    overflow: hidden;
+}
+
+.layeroptions {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-auto-columns: min-content;
+    grid-auto-flow: column;
+    justify-content: flex-end;
+}
+
+#toggle {
+    display: grid;
+    align-items: center;
+    color: white;
+}
+
+#toggle button {
+    padding: 32px 4px;
+    background: #444;
+    color: #ccc;
+}
+#toggle button:hover {
+    color: white;
+    background: #555;
+}
+
+#viewport {
+    display: grid;
+    background: black;
+    position: relative;
+}
+
+#canvas {
+    width: 100%;
+    padding: 8px;
+    max-height: 99vh;
+    margin: auto;
+    display: grid;
+    align-self: center;
+    justify-self: center;
+    box-shadow: 0px 8px 8px black;
+}
+
+#controlpanel {
+    background: #333;
+    color: #ccc;
+    overflow-y: scroll;
+    padding: 8px;
+}
+
+#export {
+    grid-area: 1 / 1;
+    stroke-linejoin: round;
+    align-self: center;
+    justify-self: center;
+    max-height: 100%;
+}
+
+.layer {
+    border: 1px solid black;
+    margin-bottom: 4px;
+}
+
+.layertitle {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    grid-auto-columns: min-content;
+    grid-auto-flow: column;
+    gap: 4px;
+    align-items: center;
+    background: #222;
+    padding: 8px;
+}
+.layertitle.with-visibility {
+    grid-template-columns: 1fr min-content 1fr;
+}
+
+.layername {
+    font-size: 10pt;
+    font-style: italic;
+    text-align: center;
+}
+
+.layertype {
+    cursor: pointer;
+}
+
+.newlayer {
+    border: 1px dashed black;
+    padding: 8px;
+    display: grid;
+    gap: 8px;
+    grid-template-columns: repeat(3, 1fr);
+}
+
+.options {
+    font-size: 9pt;
+    display: grid;
+    gap: 4px;
+    grid-auto-columns: 1fr;
+    grid-auto-flow: column;
+}
+
+.newlayeroptions {
+    font-size: 9pt;
+    display: grid;
+    gap: 4px;
+    grid-template-columns: 1fr;
+    grid-auto-columns: min-content;
+    grid-auto-flow: column;
+    grid-column-start: 1;
+    grid-column-end: -1;
+}
+
+.controls {
+    display: grid;
+    grid-template-columns: 1fr;
+    padding: 8px;
+    gap: 8px 0;
+}
+
+.field {
+    display: grid;
+    grid-auto-columns: 1fr;
+    grid-auto-flow: column;
+    padding: 2px;
+    margin: 4px;
+}
+
+.field.with-label {
+    grid-template-columns: 6em;
+}
+
+.field_label {
+    font-size: 9pt;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding: 0 4px;
+}
+
+.field_content {
+    display: grid;
+    grid-auto-columns: 1fr;
+    grid-auto-flow: column;
+    gap: 4px;
+}
+
+.group {
+    grid-column-start: 1;
+    grid-column-end: -1;
+    display: grid;
+    background: #222;
+}
+
+.group_label {
+    padding: 4px;
+    font-size: 9pt;
+    font-variant: small-caps;
+    cursor: pointer;
+}
+
+.group_content {
+    display: grid;
+    grid-auto-columns: 1fr;
+}
+
+.tabs {
+    border: 1px solid black;
+    display: grid;
+    grid-template-rows: min-content auto;
+}
+
+.tabs_menu {
+    display: grid;
+    grid-auto-columns: 1fr;
+    grid-auto-flow: column;
+    gap: 4px;
+    padding: 2px 4px;
+}
+
+.tabs_option {
+    background: #222;
+}
+
+.tabs_option.option-active {
+    background: #444;
+}
+
+.tabs_content {
+    background: #444;
+}
+
+.heading {
+    font-size: 14pt;
+    font-variant: small-caps;
+    border-bottom: 1px solid currentColor;
+    grid-column: 1 / -1;
+}
+
+.subheading {
+    font-size: 11pt;
+    font-variant: small-caps;
+    border-bottom: 1px solid currentColor;
+    grid-column: 1 / -1;
+    text-align: right;
+}
+
+.inputwrapper {
+    display: flex;
+    width: auto;
+    align-items: stretch;
+    position: relative;
+}
+
+textarea,
+select,
+input[type=number],
+input[type=text] {
+    background: #555;
+    color: white;
+    border: 1px solid black;
+    padding: 3px 8px;
+    flex: 1 1 auto;
+}
+
+select {
+    padding: 2px 8px;
+}
+
+textarea {
+    height: auto;
+    min-height: 20em;
+}
+
+input[type=checkbox] {
+    align-self: center;
+    width: 1.1em;
+    height: 1.1em;
+}
+
+select:focus,
+input[type=number]:focus,
+input[type=text]:focus {
+    border-color: white;
+}
+
+select:disabled,
+input[type=number]:disabled,
+input[type=text]:disabled {
+    border-color: black;
+    background-color: #222;
+    color: #555;
+}
+
+select:invalid,
+input[type=number]:invalid,
+input[type=text]:invalid {
+    border-color: #f88;
+    background-color: #422;
+    color: #f88;
+}
+
+input[type=range],
+input[type=text],
+input[type=number] {
+    width: 100%;
+}
+
+button {
+    padding: 2px 4px;
+    min-width: 1.5em;
+    cursor: pointer;
+    position: relative;
+}
+
+input[type=file] {
+    position: absolute;
+    inset: 0 0 0 0;
+    opacity: 0;
+}
+
+input[type=file], /* FF, IE7+, chrome (except button) */
+input[type=file]::-webkit-file-upload-button { /* chromes and blink button */
+    cursor: pointer;
+}
+
+input[type=file]:disabled, /* FF, IE7+, chrome (except button) */
+input[type=file]:disabled::-webkit-file-upload-button { /* chromes and blink button */
+    cursor: default;
+}
+
+button.symbol, button.bad-symbol, button.good-symbol {
+    color: #bbb;
+}
+
+button.good, button.bad {
+    color: white;
+    padding: 4px 8px;
+    border: 1px solid #000;
+}
+
+button.good {
+    background-color: #036;
+    border-color: #06c;
+}
+
+button.bad {
+    background-color: #600;
+    border-color: #c00;
+}
+
+button.good-symbol {
+    color: #8bf;
+}
+
+button.bad-symbol {
+    color: #f88;
+}
+
+button.symbol:focus,
+button.good-symbol:focus,
+button.bad-symbol:focus,
+button.symbol:hover,
+button.good-symbol:hover,
+button.bad-symbol:hover {
+    color: white;
+}
+
+button.good:focus, button.good:hover, button.bad:focus, button.bad:hover {
+    border-color: white;
+}
+
+button.symbol:active {
+    color: #666;
+}
+
+button.bad-symbol:active {
+    color: #600;
+}
+button.good-symbol:active {
+    color: #036;
+}
+
+button.good:active {
+    background-color: #024;
+}
+button.bad:active {
+    background-color: #400;
+}
+
+button:disabled {
+    color: #888 !important;
+    cursor: default !important;
+    border-color: #222 !important;
+}
+
+button.good:disabled, button.bad:disabled {
+    background-color: #444 !important;
+}
+
+
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+    font-family: monospace;
+}
+
+a {
+    color: #8cf;
+    text-decoration: underline;
+}
+a:hover, a:focus {
+    color: white;
 }
