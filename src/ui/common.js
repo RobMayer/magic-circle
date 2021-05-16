@@ -2,7 +2,6 @@ import { useContext } from 'react';
 import { DispatchContext, ClipboardContext } from '../contexts';
 import TextInput from './textinput';
 import { cloneDeep } from 'lodash';
-import Checkbox from './checkbox';
 import Icon from './icon';
 
 export const onChange = (dispatch, path) => {
