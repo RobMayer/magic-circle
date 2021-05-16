@@ -391,11 +391,37 @@ input.layername_field {
     font-size: 9pt;
     font-variant: small-caps;
     cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 2px;
 }
 
 .group_content {
     display: grid;
     grid-auto-columns: 1fr;
+}
+
+.row {
+    display: grid;
+    gap: 0px;
+    margin: 1px;
+    grid-auto-columns: 1fr;
+    grid-auto-flow: column;
+    align-items: center;
+}
+
+.row.with-label {
+    grid-template-columns: 3.5em;
+}
+
+.row_label {
+    text-align: right;
+    font-variant: small-caps;
+    font-size: 10pt;
+    padding: 4px;
+    display: grid;
+    align-items: center;
+    justify-content: center;
 }
 
 .tabs {
@@ -448,4 +474,19 @@ input.layername_field {
 
 .layerlist {
     padding: 4px 0;
+}
+
+.icon {
+    width: 1.2em;
+    height: 1.2em;
+    display: inline-grid;
+    vertical-align: baseline;
+}
+.icon.large {
+    width: 2.4em;
+    height: 2.4em;
+}
+
+.icon svg {
+    fill: currentColor;
 }

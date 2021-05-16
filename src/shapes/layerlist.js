@@ -4,6 +4,7 @@ import { useContext, useState } from 'react';
 import { DispatchContext, ClipboardContext } from '../contexts';
 import { cloneDeep } from 'lodash';
 import Field from '../ui/field';
+import Icon from '../ui/icon';
 
 const NewLayer = ({ path }) => {
     const dispatch = useContext(DispatchContext);
@@ -18,8 +19,8 @@ const NewLayer = ({ path }) => {
                     console.log(path, clipboard);
                     dispatch({ action: "append", path, value: cloneDeep(clipboard) });
                     setIsOpen(false);
-                }}>Paste</button>
-                <button className='bad-symbol' onClick={(e) => { setIsOpen(false); }}>{"\u2716"}</button>
+                }}><Icon.PASTE /></button>
+                <button className='bad-symbol' onClick={(e) => { setIsOpen(false); }}><Icon.CLOSE /></button>
             </div>
             <Field.SubHeading>Shapes</Field.SubHeading>
             {Object.entries(LAYERS).filter(([type, { category }]) => category === "shape").map(([ type, { term, validate } ]) => {

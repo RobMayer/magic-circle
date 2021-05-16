@@ -33,15 +33,19 @@ export const Radius = ({ value, path, dispatch, label = "Radius", tooltip, withS
 export const Transforms = ({ layer, path, dispatch, withRotation }) => {
     return <Field.Group label={withRotation ? "Position & Rotation" : "Position"}>
         <Tabs value={layer.posMode} onChange={onValue(dispatch, `${path}.posMode`)}>
-            <Tabs.Option value={"cartesian"} label={"Cartesian"}>
-                <Length label={"X Position"} dispatch={dispatch} value={layer.x} path={`${path}.x`} />
-                <Length label={"Y Position"} dispatch={dispatch} value={layer.y} path={`${path}.y`} />
-            </Tabs.Option>
             <Tabs.Option value={"polar"} label={"Polar"}>
-                <Length label={"Distance"} dispatch={dispatch} value={layer.r} path={`${path}.r`} />
-                <Field label={"Angle"}>
-                    <NumberInput value={layer.t} onChange={onChange(dispatch, `${path}.t`)} step={0.001} />
-                </Field>
+                <Field.Row>
+                    <Length label={"Distance"} dispatch={dispatch} value={layer.r} path={`${path}.r`} />
+                    <Field label={"Angle"}>
+                        <NumberInput value={layer.t} onChange={onChange(dispatch, `${path}.t`)} step={0.001} />
+                    </Field>
+                </Field.Row>
+            </Tabs.Option>
+            <Tabs.Option value={"cartesian"} label={"Cartesian"}>
+                <Field.Row>
+                    <Length label={"X Position"} dispatch={dispatch} value={layer.x} path={`${path}.x`} />
+                    <Length label={"Y Position"} dispatch={dispatch} value={layer.y} path={`${path}.y`} />
+                </Field.Row>
             </Tabs.Option>
         </Tabs>
         { withRotation ?

@@ -8,10 +8,11 @@ import TextInput from './ui/textinput';
 import Prefabs from './ui/prefabs';
 import { saveAs } from 'file-saver';
 import { validateUpload } from './util/validation';
+import Icon from './ui/icon';
 
-const version = "0.1.2";
+const version = "0.1.4";
 
-const handleUpload = (file, dispatch) => {
+const handleUpload = (element, file, dispatch) => {
     if (file) {
         const reader = new FileReader();
         reader.readAsText(file);
@@ -21,16 +22,19 @@ const handleUpload = (file, dispatch) => {
                 const value = validateUpload(json, "");
                 console.dir(value);
                 if (value) {
-                    dispatch({ action: "load", value })
+                    dispatch({ action: "load", value });
                 } else {
                     console.error("problem parsing uploaded file");
                 }
             } catch (e) {
                 console.error("problem parsing json");
+            } finally {
+                element.value = null;
             }
         }
         reader.onerror = (evt) => {
             console.error("problem reading file");
+            element.value = null;
         }
     }
 }
@@ -109,24 +113,32 @@ function App() {
             </CanvasContext.Provider>
         </div>
         <div id='toggle'>
-            <button onClick={() => { setIsOpen(!isOpen) }}>{isOpen ? "\u25BA" : "\u25C4"}</button>
+            <button onClick={() => { setIsOpen(!isOpen) }}>{isOpen ? <Icon.ARROW_E /> : <Icon.ARROW_W />}</button>
         </div>
         {isOpen ?
             <div id="controlpanel">
                 <Field.Heading>Arcanigen</Field.Heading>
                 <div className='controls'>
                 <Field.Group label={"About"}>
-                    <Field label={"Version"}><code>{version}</code></Field>
-                    <Field label={"Twitter"}><a href='https://twitter.com/ThatRobHuman' rel='noreferrer' target='_blank'>@ThatRobHuman</a></Field>
-                    <Field label={"Instagram"}><a href='https://www.instagram.com/thatrobhuman/' rel='noreferrer' target='_blank'>ThatRobHuman</a></Field>
-                    <Field label={"Etsy"}><a href='https://etsy.com/shop/KDYards' rel='noreferrer' target='_blank'>KDYards</a></Field>
+                    <Field.Row label={"Ver"}>
+                        <code>{version}</code>
+                    </Field.Row>
+                    <Field.Row label={<Icon.TWITTER className={"large"} />}>
+                        <a href='https://twitter.com/ThatRobHuman' rel='noreferrer' target='_blank'>@ThatRobHuman</a>
+                    </Field.Row>
+                    <Field.Row label={<Icon.INSTAGRAM className={"large"} />}>
+                        <a href='https://www.instagram.com/thatrobhuman/' rel='noreferrer' target='_blank'>ThatRobHuman</a>
+                    </Field.Row>
+                    <Field.Row label={<Icon.ETSY className={"large"} />}>
+                        <a href='https://etsy.com/shop/KDYards' rel='noreferrer' target='_blank'>KDYards</a>
+                    </Field.Row>
                 </Field.Group>
                 </div>
                 <div className='options'>
                     <button className='good'>
                         Load
                         <input type='file' onChange={(e) => {
-                            handleUpload(e.target.files[0] ?? null, dispatch);
+                            handleUpload(e.target, e.target.files[0] ?? null, dispatch);
                         }} accept=".json" />
                     </button>
                     <button className='good' disabled={state.layers.length === 0} onClick={() => {
