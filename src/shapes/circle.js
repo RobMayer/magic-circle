@@ -22,7 +22,7 @@ export const Drawing = ({ path, posMode, x, y, r, t, radius, fill, stroke, scale
         styles.stroke = stroke.option === "foreground" ? "#fff" : stroke.option === "background" ? "#000" : "none";
     }
     const rad = radius.value * radius.unit * (radius.useScale ? scale : 1);
-    const d = `M 0 0 m ${rad},0 a ${rad},${rad} 0 1,0 ${-rad * 2},0 a ${rad},${rad} 0 1,0 ${rad*2},0`;
+    const d = `M ${rad},0 A 1,1 0 1,0 ${-rad},0 A 1,1 0 1,0 ${rad},0`;
     return <path d={d} style={styles} />
 }
 Drawing.defaultProps = {

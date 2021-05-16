@@ -141,7 +141,7 @@ export const LAYERS = {
                 outer: checkLengthWithScale(data, [...path, 'outer'], 1.5, 96, true, isNumber),
                 radius: checkLengthWithScale(data, [...path, 'radius'], 1.5, 96, true, isNumber),
                 spread: checkLengthWithScale(data, [...path, 'spread'], 0.5, 96, true, isNumber),
-                thetaMode: checkValue(data, [...path, 'thetamode'], 'incremental', isEnum("incremental", "startstop")),
+                thetaMode: checkValue(data, [...path, 'thetaMode'], 'incremental', isEnum("incremental", "startstop")),
                 step: checkValue(data, [...path, 'step'], 72, isNumber),
                 toExtent: checkValue(data, [...path, 'toExtent'], false, isBoolean),
                 coverage: {
@@ -219,7 +219,7 @@ export const LAYERS = {
                 outer: checkLengthWithScale(data, [...path, 'outer'], 2, 96, true, isNumber),
                 radius: checkLengthWithScale(data, [...path, 'radius'], 1.5, 96, true, isNumber),
                 spread: checkLengthWithScale(data, [...path, 'spread'], 0.5, 96, true, isNumber),
-                thetaMode: checkValue(data, [...path, 'thetamode'], 'incremental', isEnum("incremental", "startstop")),
+                thetaMode: checkValue(data, [...path, 'thetaMode'], 'incremental', isEnum("incremental", "startstop")),
                 step: checkValue(data, [...path, 'step'], 20, isNumber),
                 skipLast: checkValue(data, [...path, 'skipLast'], false, isBoolean),
                 coverage: {
@@ -237,7 +237,7 @@ export const LAYERS = {
             }
         }
     },
-    vertexarry: {
+    vertexary: {
         term: "Vertex Array",
         category: "collection",
         validate: (data, path) => {
@@ -253,7 +253,7 @@ export const LAYERS = {
                 y: checkLength(data, [...path, 'y'], 0, 96),
                 rotation: checkValue(data, [...path, 'rotation'], 0, isNumber),
                 radius: checkPolygonRadius(data, [...path, 'radius'], 1.5, 96, true, isGTE(0)),
-                count: checkValue(data, [...path, 'count'], 5, isInteger, isGTE(5), isLTE(24)),
+                count: checkValue(data, [...path, 'count'], 5, isInteger),
                 scaleFactor: {
                     start: checkValue(data, [...path, 'scaleFactor', 'start'], 1, isNumber),
                     end: checkValue(data, [...path, 'scaleFactor', 'end'], 1, isNumber),

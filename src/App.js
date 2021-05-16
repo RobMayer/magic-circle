@@ -4,11 +4,12 @@ import LayerList from './shapes/layerlist';
 import { DispatchContext, ClipboardContext, CanvasContext } from './contexts';
 import Field from './ui/field';
 import ColorInput from './ui/colorinput';
+import TextInput from './ui/textinput';
 import Prefabs from './ui/prefabs';
 import { saveAs } from 'file-saver';
 import { validateUpload } from './util/validation';
 
-const version = "0.1.0-alpha";
+const version = "0.1.1";
 
 const handleUpload = (file, dispatch) => {
     if (file) {
@@ -140,6 +141,11 @@ function App() {
                     <button className='bad' disabled={state.layers.length === 0} onClick={() => {
                         dispatch({ action: "load", value: _.cloneDeep(initialState) })
                     }}>Clear</button>
+                </div>
+                <div className='controls'>
+                    <Field label={"Name"}>
+                        <TextInput value={state.name} onChange={(evt) => { dispatch({ action:'edit', path: "name", value: evt.target.value })}} />
+                    </Field>
                 </div>
                 <div className='controls'>
                     <Field.Group label={"Canvas"}>

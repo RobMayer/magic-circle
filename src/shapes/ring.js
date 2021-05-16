@@ -25,7 +25,7 @@ export const Drawing = ({ path, posMode, x, y, r, t, radialMode, inner, outer, r
     const rO = radialMode === "innerouter" ? (outer.value * outer.unit * (outer.usesScale ? scale : 1)) : (radius.value * radius.unit * (radius.usesScale ? scale : 1) + (spread.value * spread.unit * (spread.usesScale ? scale : 1)) / 2);
     const rI = radialMode === "innerouter" ? (inner.value * inner.unit * (inner.usesScale ? scale : 1)) : (radius.value * radius.unit * (radius.usesScale ? scale : 1) - (spread.value * spread.unit * (spread.usesScale ? scale : 1)) / 2);
 
-    const d = `M 0,0 m 0,${-rO} a ${rO},${rO}, 0, 1, 0, 1, 0 Z M 0,0 m 0,${rI} a ${-rI},${-rI}, 0, 1, 1, 1, 0 Z`;
+    const d = `M ${rO},0 A 1,1 0 0,0 ${-rO},0 A 1,1 0 0,0 ${rO},0 M ${rI},0 A 1,1 0 0,1 ${-rI},0 A 1,1 0 0,1 ${rI},0`;
     return <path d={d} style={styles} />
 }
 
