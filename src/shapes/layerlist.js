@@ -53,11 +53,11 @@ export const Drawing = ({ path, layers, renderAsMask }) => {
 
 export const Interface = ({ layers, path, fromMask }) => {
     return <div className='layerlist'>
+        <NewLayer path={path} />
         {layers.map(({ type, ...layer }, i) => {
             const p = `${path}[${i}]`;
             return <Shapes.Interface type={type} {...layer} path={p} key={i} fromMask={fromMask} />
-        })}
-        <NewLayer path={path} />
+        }).reverse()}
     </div>
 }
 

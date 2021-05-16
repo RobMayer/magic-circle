@@ -1,5 +1,5 @@
-const SliderInput = (props) => {
-    return <div className={`inputwrapper`}>
+const SliderInput = ({ wrapperClass, ...props}) => {
+    return <div className={`inputwrapper ${wrapperClass}`}>
         <input type='range' {...props} />
     </div>
 }

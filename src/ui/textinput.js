@@ -1,5 +1,5 @@
-const TextInput = (props) => {
-    return <div className={`inputwrapper`}>
+const TextInput = ({ wrapperClass, ...props}) => {
+    return <div className={`inputwrapper ${wrapperClass ?? ""}`}>
         <input type={'text'} {...props} />
     </div>
 }

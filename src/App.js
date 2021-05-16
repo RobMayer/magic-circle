@@ -9,7 +9,7 @@ import Prefabs from './ui/prefabs';
 import { saveAs } from 'file-saver';
 import { validateUpload } from './util/validation';
 
-const version = "0.1.1";
+const version = "0.1.2";
 
 const handleUpload = (file, dispatch) => {
     if (file) {
@@ -49,11 +49,11 @@ const reducer = (state, { action, path, value }) => {
             return state;
         }
         const cur = _.get(pathToEdit, state);
-        if (action === 'shiftup' && idx !== 0) {
+        if (action === 'shiftdn' && idx !== 0) {
             const sorted = [...cur.slice(0, idx - 1), cur[idx], cur[idx - 1], ...cur.slice(idx + 1)];
             return _.set(pathToEdit, sorted, state);
         }
-        if (action === "shiftdn" && idx !== cur.length - 1) {
+        if (action === 'shiftup' && idx !== cur.length - 1) {
             const sorted = [...cur.slice(0, idx), cur[idx + 1], cur[idx], ...cur.slice(idx + 2)]
             return _.set(pathToEdit, sorted, state);
         }

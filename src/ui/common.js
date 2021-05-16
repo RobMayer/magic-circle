@@ -24,27 +24,28 @@ export const Wrapper = ({ name, layer, path, children, withVisibility }) => {
 
     return <div className='layer'>
         <div className={`layertitle`}>
-            <div onClick={(e) => { dispatch({ action: 'edit', path: `${path}.isOpen`, value: !isOpen}) }} className='layertype'> {isOpen ? "\u25BC" : "\u25BA"} {name}</div>
-            <div className='layername'>{layer.name}</div>
+            <div onClick={(e) => { dispatch({ action: 'edit', path: `${path}.isOpen`, value: !isOpen}) }} className='layerfold'>{isOpen ? "\u25BC" : "\u25BA"}</div>
             {withVisibility ?
-                <Checkbox tooltip={"Hide/Show Layer"} value={layer.visible} onChange={(e) => { dispatch({ action: "edit", path: `${path}.visible`, value: !layer.visible })}} />
-            : null }
-            <button className='symbol' onClick={(e) => { dispatch({ action: "shiftup", path })}} >{"\u25B2"}</button>
-            <button className='symbol' onClick={(e) => { dispatch({ action: "shiftdn", path })}} >{"\u25BC"}</button>
-            <button className='bad-symbol' onClick={(e) => { dispatch({ action: "remove", path }) }}>{"\u2716"}</button>
-        </div>
-        {isOpen ?
-            <div className='controls'>
-                <div className='layeroptions'>
-                <TextInput value={layer.name} onChange={onChange(dispatch, `${path}.name`)} />
+                <Checkbox wrapperClass={'layervis'} tooltip={"Hide/Show Layer"} value={layer.visible} onChange={(e) => { dispatch({ action: "edit", path: `${path}.visible`, value: !layer.visible })}} />
+                : <Checkbox wrapperClass={'layervis'} checked={false} disabled={true} />
+            }
+            <div className='layertype'>{name}</div>
+            <TextInput wrapperClass={'layername'} className={'layername_field'} value={layer.name} onChange={onChange(dispatch, `${path}.name`)} placeholder={"layer name"} />
+            <div className='layercmd'>
+                <button title="Copy" className='symbol' onClick={() => {
+                    setClipboard(cloneDeep(layer));
+                }}>&#x1F5D7;</button>
                 <button title="Cut" className='symbol' onClick={() => {
                     setClipboard(cloneDeep(layer));
                     dispatch({ action: "remove", path });
                 }}>&#x2702;</button>
-                <button title="Copy" className='symbol' onClick={() => {
-                    setClipboard(cloneDeep(layer));
-                }}>&#x1F5D7;</button>
-                </div>
+                <button className='bad-symbol layerdel' onClick={(e) => { dispatch({ action: "remove", path }) }}>{"\u2716"}</button>
+            </div>
+            <button className='symbol layersort sortup' onClick={(e) => { dispatch({ action: "shiftup", path })}} >{"\u25B2"}</button>
+            <button className='symbol layersort sortdn' onClick={(e) => { dispatch({ action: "shiftdn", path })}} >{"\u25BC"}</button>
+        </div>
+        {isOpen ?
+            <div className='controls'>
                 {children}
             </div>
          : null }
