@@ -7,6 +7,7 @@ import Tabs from '../ui/tabs';
 import { range } from 'lodash';
 import NumberInput from '../ui/numberinput';
 import Field from '../ui/field';
+import Dropdown from '../ui/dropdown';
 import Interpolation from '../util/interpolation';
 
 export const Drawing = ({ path, posMode, x, y, r, t, fill, stroke, rotation, radialMode, inner, outer, radius, spread, thetaMode, count, step, coverage, toExtent, thetaCurve, scale, visible, renderAsMask }) => {
@@ -81,11 +82,11 @@ export const Interface = ({ layer, path, fromMask }) => {
                     <Checkbox value={layer.toExtent} onChange={onValue(dispatch, `${path}.toExtent`)} />
                 </Field>
                 <Field label={"Distribution"}>
-                    <select value={layer.thetaCurve} onChange={onChange(dispatch, `${path}.thetaCurve`)}>
+                    <Dropdown value={layer.thetaCurve} onChange={onChange(dispatch, `${path}.thetaCurve`)}>
                         {Object.keys(Interpolation.curves).map((curve) => {
                             return <option key={curve} value={curve}>{curve}</option>
                         })}
-                    </select>
+                    </Dropdown>
                 </Field>
             </Tabs.Option>
         </Tabs>

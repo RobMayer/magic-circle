@@ -1,5 +1,5 @@
 const NumericInput = ({ wrapperClass, ...props}) => {
-    return <div className={`inputwrapper ${wrapperClass}`}>
+    return <div className={`inputwrapper ${wrapperClass ?? ""}`}>
         <input type='number' {...props} />
     </div>
 }

@@ -4,6 +4,7 @@ import { Wrapper, onChange } from '../ui/common';
 import Prefabs from '../ui/prefabs';
 import SliderInput from '../ui/sliderinput';
 import NumberInput from '../ui/numberinput';
+import Dropdown from '../ui/dropdown';
 import Field from '../ui/field';
 import { range } from 'lodash';
 import Interpolation from '../util/interpolation';
@@ -57,11 +58,11 @@ export const Interface = ({ layer, path, fromMask }) => {
             <NumberInput value={layer.sides} onChange={onChange(dispatch, `${path}.sides`)} min={3} max={24} step={1} />
         </Field>
         <Field label={"Distribution"}>
-            <select value={layer.thetaCurve} onChange={onChange(dispatch, `${path}.thetaCurve`)}>
+            <Dropdown value={layer.thetaCurve} onChange={onChange(dispatch, `${path}.thetaCurve`)}>
                 {Object.keys(Interpolation.curves).map((curve) => {
                     return <option key={curve} value={curve}>{curve}</option>
                 })}
-            </select>
+            </Dropdown>
         </Field>
         <Prefabs.Transforms layer={layer} path={path} dispatch={dispatch} withRotation />
         <Prefabs.Appearance layer={layer} path={path} dispatch={dispatch} withFill withStroke fromMask={fromMask} />

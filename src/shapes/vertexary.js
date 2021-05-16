@@ -6,6 +6,7 @@ import Prefabs from '../ui/prefabs';
 import { range } from 'lodash';
 import NumberInput from '../ui/numberinput';
 import Field from '../ui/field';
+import Dropdown from '../ui/dropdown';
 import LayerList from './layerlist';
 import Interpolation from '../util/interpolation';
 
@@ -50,21 +51,21 @@ export const Interface = ({ layer, path, fromMask }) => {
         </Field>
         <Prefabs.Radius label={"Radius"} value={layer.radius} dispatch={dispatch} path={`${path}.radius`} withScribe withScale />
         <Field label={"Distribution"}>
-            <select value={layer.thetaCurve} onChange={onChange(dispatch, `${path}.thetaCurve`)}>
+            <Dropdown value={layer.thetaCurve} onChange={onChange(dispatch, `${path}.thetaCurve`)}>
                 {Object.keys(Interpolation.curves).map((curve) => {
                     return <option key={curve} value={curve}>{curve}</option>
                 })}
-            </select>
+            </Dropdown>
         </Field>
         <Field.Group label={"Scale Factors"}>
             <Field label={"Start"}><NumberInput value={layer.scaleFactor.start} onChange={onChange(dispatch, `${path}.scaleFactor.start`)} step={0.001} min={0} /></Field>
             <Field label={"End"}><NumberInput value={layer.scaleFactor.end} onChange={onChange(dispatch, `${path}.scaleFactor.end`)} step={0.001} min={0} /></Field>
             <Field label={"Distribution"}>
-                <select value={layer.scaleCurve} onChange={onChange(dispatch, `${path}.scaleCurve`)}>
+                <Dropdown value={layer.scaleCurve} onChange={onChange(dispatch, `${path}.scaleCurve`)}>
                     {Object.keys(Interpolation.curves).map((curve) => {
                         return <option key={curve} value={curve}>{curve}</option>
                     })}
-                </select>
+                </Dropdown>
             </Field>
         </Field.Group>
         <Prefabs.Transforms layer={layer} path={path} dispatch={dispatch} withRotation />

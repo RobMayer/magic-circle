@@ -8,6 +8,7 @@ import Tabs from '../ui/tabs';
 import { range } from 'lodash';
 import NumberInput from '../ui/numberinput';
 import Field from '../ui/field';
+import Dropdown from '../ui/dropdown';
 import LayerList from './layerlist';
 import Interpolation from '../util/interpolation';
 
@@ -55,22 +56,22 @@ export const Interface = ({ layer, path, fromMask }) => {
                 <Prefabs.Radius label={"Radius"} value={layer.radius} dispatch={dispatch} path={`${path}.radius`} withScale />
                 <Prefabs.Length label={"Spread"} value={layer.spread} dispatch={dispatch} path={`${path}.spread`} withScale />
                 <Field label={"Distribution"}>
-                    <select value={layer.radialCurve} onChange={onChange(dispatch, `${path}.radialCurve`)}>
+                    <Dropdown value={layer.radialCurve} onChange={onChange(dispatch, `${path}.radialCurve`)}>
                         {Object.keys(Interpolation.curves).map((curve) => {
                             return <option key={curve} value={curve}>{curve}</option>
                         })}
-                    </select>
+                    </Dropdown>
                 </Field>
             </Tabs.Option>
             <Tabs.Option value={"innerouter"} label={"Inner / Outer"}>
                 <Prefabs.Radius label={"Radius (Inner)"} value={layer.inner} dispatch={dispatch} path={`${path}.inner`} withScale />
                 <Prefabs.Radius label={"Radius (Outer)"} value={layer.outer} dispatch={dispatch} path={`${path}.outer`} withScale />
                 <Field label={"Distribution"}>
-                    <select value={layer.radialCurve} onChange={onChange(dispatch, `${path}.radialCurve`)}>
+                    <Dropdown value={layer.radialCurve} onChange={onChange(dispatch, `${path}.radialCurve`)}>
                         {Object.keys(Interpolation.curves).map((curve) => {
                             return <option key={curve} value={curve}>{curve}</option>
                         })}
-                    </select>
+                    </Dropdown>
                 </Field>
             </Tabs.Option>
         </Tabs>
@@ -91,11 +92,11 @@ export const Interface = ({ layer, path, fromMask }) => {
                     <Checkbox value={layer.skipLast} onChange={onValue(dispatch, `${path}.skipLast`)} />
                 </Field>
                 <Field label={"Distribution"}>
-                    <select value={layer.thetaCurve} onChange={onChange(dispatch, `${path}.thetaCurve`)}>
+                    <Dropdown value={layer.thetaCurve} onChange={onChange(dispatch, `${path}.thetaCurve`)}>
                         {Object.keys(Interpolation.curves).map((curve) => {
                             return <option key={curve} value={curve}>{curve}</option>
                         })}
-                    </select>
+                    </Dropdown>
                 </Field>
             </Tabs.Option>
         </Tabs>
@@ -103,11 +104,11 @@ export const Interface = ({ layer, path, fromMask }) => {
             <Field label={"Start"}><NumberInput value={layer.scaleFactor.start} onChange={onChange(dispatch, `${path}.scaleFactor.start`)} step={0.001} min={0} /></Field>
             <Field label={"End"}><NumberInput value={layer.scaleFactor.end} onChange={onChange(dispatch, `${path}.scaleFactor.end`)} step={0.001} min={0} /></Field>
             <Field label={"Distribution"}>
-                <select value={layer.scaleCurve} onChange={onChange(dispatch, `${path}.scaleCurve`)}>
+                <Dropdown value={layer.scaleCurve} onChange={onChange(dispatch, `${path}.scaleCurve`)}>
                     {Object.keys(Interpolation.curves).map((curve) => {
                         return <option key={curve} value={curve}>{curve}</option>
                     })}
-                </select>
+                </Dropdown>
             </Field>
         </Field.Group>
         <Prefabs.Transforms layer={layer} path={path} dispatch={dispatch} withRotation />

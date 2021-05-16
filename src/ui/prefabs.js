@@ -2,12 +2,13 @@ import Field from './field';
 import NumberInput from './numberinput';
 import UnitDropdown from './unitdropdown';
 import ColorInput from './colorinput';
+import Dropdown from './dropdown';
 import Checkbox from './checkbox';
 import Tabs from './tabs';
 import { onChange, onValue } from './common';
 
 export const Length = ({ value, path, dispatch, label, tooltip, valueField = "value", unitField = "unit", scaleField = "useScale", min, withScale }) => {
-    return <Field label={label} tooltip={tooltip} columns={`2fr 1fr ${withScale ? "min-content" : ""}`}>
+    return <Field label={label} tooltip={tooltip} columns={`2.5fr 1fr ${withScale ? "min-content" : ""}`}>
         <NumberInput value={value[valueField]} onChange={onChange(dispatch, `${path}.${valueField}`)} step={0.001} min={min} />
         <UnitDropdown value={value[unitField]} onChange={onChange(dispatch, `${path}.${unitField}`)} />
         { withScale ?  <Checkbox value={value[scaleField]} onChange={onValue(dispatch, `${path}.${scaleField}`)} title={"Use Scale Factor"} /> : null }
@@ -15,15 +16,15 @@ export const Length = ({ value, path, dispatch, label, tooltip, valueField = "va
 }
 
 export const Radius = ({ value, path, dispatch, label = "Radius", tooltip, withScribe, withScale }) => {
-    return <Field label={label} tooltip={tooltip} columns={`2fr 1fr ${withScribe ? "1fr" : ""} ${withScale ? "min-content" : ""}`}>
+    return <Field label={label} tooltip={tooltip} columns={`2.5fr 1fr ${withScribe ? "2fr" : ""} ${withScale ? "min-content" : ""}`}>
         <NumberInput value={value.value} onChange={onChange(dispatch, `${path}.value`)} step={0.001} min={0} />
         <UnitDropdown value={value.unit} onChange={onChange(dispatch, `${path}.unit`)} />
         { withScribe ?
-            <select value={value.scribe} onChange={onChange(dispatch, `${path}.scribe`)}>
+            <Dropdown value={value.scribe} onChange={onChange(dispatch, `${path}.scribe`)}>
                 <option value={'circumscribe'}>Circumscribe</option>
                 <option value={'inscribe'}>Inscribe</option>
                 <option value={'middle'}>Middle</option>
-            </select>
+            </Dropdown>
         : null}
         { withScale ? <Checkbox value={value.useScale} onChange={onValue(dispatch, `${path}.useScale`)} title={"Use Scale Factor"} /> : null }
     </Field>
@@ -56,23 +57,23 @@ export const Appearance = ({ layer, path, dispatch, withStroke, withFill, fromMa
         return <Field.Group label={"Appearance"}>
             {withFill ?
                 <Field label={"Fill Color"} columns={"2fr 1fr"}>
-                    <select value={layer.fill.option} onChange={onChange(dispatch, `${path}.fill.option`)}>
+                    <Dropdown value={layer.fill.option} onChange={onChange(dispatch, `${path}.fill.option`)}>
                         <option value='none'>None</option>
                         <option value='foreground'>{fromMask ? "Reveal" : "Foreground"}</option>
                         <option value='background'>{fromMask ? "Hide" : "Background"}</option>
                         <option value='custom'>Custom</option>
-                    </select>
+                    </Dropdown>
                     <ColorInput value={layer.fill.color} onChange={onChange(dispatch, `${path}.fill.color`)} disabled={layer.fill.option !== "custom"} />
                 </Field>
             : null }
             {withStroke ?
                 <Field label={"Stroke Color"} columns={"2fr 1fr"}>
-                    <select value={layer.stroke.option} onChange={onChange(dispatch, `${path}.stroke.option`)}>
+                    <Dropdown value={layer.stroke.option} onChange={onChange(dispatch, `${path}.stroke.option`)}>
                         <option value='none'>None</option>
                         <option value='foreground'>{fromMask ? "Reveal" : "Foreground"}</option>
                         <option value='background'>{fromMask ? "Hide" : "Background"}</option>
                         <option value='custom'>Custom</option>
-                    </select>
+                    </Dropdown>
                     <ColorInput value={layer.stroke.color} onChange={onChange(dispatch, `${path}.stroke.color`)} disabled={layer.stroke.option !== "custom"} />
                 </Field>
             : null }

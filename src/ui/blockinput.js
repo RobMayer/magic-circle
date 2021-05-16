@@ -1,5 +1,5 @@
-const BlockInput = (props) => {
-    return <div className={`inputwrapper`}>
+const BlockInput = ({ wrapperClass, ...props }) => {
+    return <div className={`inputwrapper ${wrapperClass ?? ""}`}>
         <textarea {...props} />
     </div>
 }
