@@ -1,7 +1,10 @@
+html {
+    background: black;
+}
+
 body {
     font-family: sans-serif;
     font-size: 11pt;
-    background: black;
 }
 
 * {
@@ -170,11 +173,11 @@ code {
     font-family: monospace;
 }
 
-a {
+a, button.link {
     color: #8cf;
     text-decoration: underline;
 }
-a:hover, a:focus {
+button.link:hover, button.link:focus, a:hover, a:focus {
     color: white;
 }
 
@@ -186,6 +189,20 @@ a:hover, a:focus {
     height: 100vh;
     width: 100vw;
     overflow: hidden;
+    position: relative;
+    color: #ccc;
+}
+
+#modalwrap {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    background: #0008;
+    display: grid;
+    align-items: center;
+    justify-items: center;
 }
 
 .layeroptions {
@@ -535,4 +552,50 @@ p:last-child {
 
 .newlayer_warning {
     margin: 0 4px;
+}
+
+.modal {
+    background: #111;
+    width: 480px;
+    max-height: 90%;
+    display: grid;
+    grid-template-rows: min-content 1fr;
+    border: 1px solid #666;
+    padding: 4px;
+    border-radius: 8px;
+}
+
+.modal_title {
+    font-size: 14pt;
+    font-variant: small-caps;
+    display: grid;
+    grid-template-columns: 1fr min-content;
+    padding: 8px;
+    color: white;
+}
+
+.modal_content {
+    padding: 16px;
+    overflow-y: auto;
+}
+
+.changelog_version {
+    font-size: 12pt;
+    border-bottom: 1px solid #ccc;
+    color: #fc3;
+}
+
+.changelog_item {
+    font-size: 10pt;
+}
+
+li {
+    list-style-position: outside;
+    list-style-type: disc;
+    margin: 8px;
+    margin-left: 1.5em;
+}
+
+li:before {
+
 }

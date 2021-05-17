@@ -9,8 +9,10 @@ import Prefabs from './ui/prefabs';
 import { saveAs } from 'file-saver';
 import { validateUpload } from './util/validation';
 import Icon from './ui/icon';
+import optimize from 'svgo-browser/lib/optimize';
+import changelog from './changelog';
 
-const version = "0.3.1";
+const version = "0.3.2";
 
 const handleUpload = (element, file, dispatch) => {
     if (file) {
@@ -95,6 +97,7 @@ function App() {
     const [isOpen, setIsOpen] = useState(true);
     const [state, dispatch] = useReducer(reducer, initialState);
     const clipboard = useState(null);
+    const [changeLogOpen, setChangeLogOpen] = useState(false);
 
     const cw = state.dimensions.w.value * state.dimensions.w.unit;
     const ch = state.dimensions.h.value * state.dimensions.h.unit;
@@ -121,7 +124,7 @@ function App() {
                 <div className='controls'>
                 <Field.Group label={"About"}>
                     <Field.Row label={"Ver"}>
-                        <code>{version}</code>
+                        <code>{version} [<button className='link' onClick={() => { setChangeLogOpen(!changeLogOpen); }}>Changelog</button>]</code>
                     </Field.Row>
                     <Field.Row label={<Icon.TWITTER className={"large"} />}>
                         <a href='https://twitter.com/ThatRobHuman' rel='noreferrer' target='_blank'>@ThatRobHuman</a>
@@ -147,8 +150,13 @@ function App() {
                     }}>Save</button>
                     <button className='good' disabled={state.layers.length === 0} onClick={() => {
                         const content = document.getElementById("export").innerHTML;
-                        const b = new Blob([`<svg viewBox="${cw / -2} ${ch / -2} ${cw} ${ch}" xmlns="http://www.w3.org/2000/svg" xmlnsXlink= "http://www.w3.org/1999/xlink">${content}</svg>`], { type: "image/svg+xml;charset=utf-8"});
-                        saveAs(b, `${state.name === "" ? "MagicCircle" : state.name}.svg`)
+                        const svgData = `<svg viewBox="${cw / -2} ${ch / -2} ${cw} ${ch}" xmlns="http://www.w3.org/2000/svg" xmlnsXlink= "http://www.w3.org/1999/xlink">${content}</svg>`;
+                        optimize(svgData).then((res) => {
+                            const b = new Blob([res], { type: "image/svg+xml;charset=utf-8"});
+                            saveAs(b, `${state.name === "" ? "MagicCircle" : state.name}.svg`)
+                        }).catch((e) => {
+                            console.error(e);
+                        })
                     }}>Export SVG</button>
                     <button className='bad' disabled={state.layers.length === 0} onClick={() => {
                         dispatch({ action: "load", value: _.cloneDeep(initialState) })
@@ -189,6 +197,27 @@ function App() {
                 </DispatchContext.Provider>
             </div>
         : null }
+        { changeLogOpen ?
+        <div id='modalwrap'>
+            <div className='modal changelog'>
+                <div className='modal_title'>
+                    <div>Changelog</div>
+                    <button className={"bad-symbol"} onClick={() => { setChangeLogOpen(false) }}><Icon.CLOSE /></button>
+                </div>
+                <div className='modal_content'>
+                    {changelog.map(({ version, items }) => {
+                        return <div className={'changelog_entry'} key={version}>
+                            <div className={'changelog_version'}>{version}</div>
+                            <ul className={'changelog_item'}>
+                                {items.map((item, i) => {
+                                    return <li key={i}>{item}</li>
+                                })}
+                            </ul>
+                        </div>
+                    })}
+                </div>
+            </div>
+        </div> : null}
     </div>
 }
 
