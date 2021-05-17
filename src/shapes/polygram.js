@@ -21,7 +21,7 @@ const getRadius = (radius, scribe, sides) => {
     }
 }
 
-export const Drawing = ({ path, posMode, x, y, r, t, radius, sides, skip, fill, rotation, stroke, thetaCurve, scale, visible, renderAsMask }) => {
+export const Drawing = ({ path, posMode, x, y, r, t, radius, scribeMode, sides, skip, fill, rotation, stroke, thetaCurve, scale, visible, renderAsMask }) => {
     const canvas = useContext(CanvasContext);
     if (!visible) { return null }
     skip = Number(skip);
@@ -30,7 +30,7 @@ export const Drawing = ({ path, posMode, x, y, r, t, radius, sides, skip, fill, 
     }
     const cx = posMode === 'cartesian' ? x.value * x.unit : (r.value * r.unit) * Math.cos((-t + 90) * Math.PI / 180);
     const cy = posMode === 'cartesian' ? y.value * y.unit : (r.value * r.unit) * Math.sin((-t + 90) * Math.PI / 180);
-    const rad = getRadius(radius.value * radius.unit * (radius.useScale ? scale : 1), radius.scribe, sides);
+    const rad = getRadius(radius.value * radius.unit * (radius.useScale ? scale : 1), scribeMode, sides);
     const angles = range(0, sides).map((a) => {
         return Interpolation.lerp(Interpolation.delerp(a, 0, sides), 0, 360, thetaCurve);
     })
@@ -60,7 +60,14 @@ Drawing.defaultProps = {
 export const Interface = ({ layer, path, fromMask }) => {
     const dispatch = useContext(DispatchContext);
     return <Wrapper layer={layer} path={path} name='Polygram' withVisibility>
-        <Prefabs.Radius label={"Radius"} value={layer.radius} dispatch={dispatch} path={`${path}.radius`} withScribe withScale />
+        <Prefabs.Length label={"Radius"} value={layer.radius} dispatch={dispatch} path={`${path}.radius`} withScale />
+        <Field label={"Scribe Mode"}>
+            <Dropdown value={layer.scribeMode} onChange={onChange(dispatch, `${path}.scribeMode`)}>
+                <option value={'circumscribe'}>Circumscribe</option>
+                <option value={'inscribe'}>Inscribe</option>
+                <option value={'middle'}>Middle</option>
+            </Dropdown>
+        </Field>
         <Field label={"Sides"} columns={"2fr 1fr"}>
             <SliderInput value={layer.sides} onChange={onChange(dispatch, `${path}.sides`)} min={3} max={24} step={1} />
             <NumberInput value={layer.sides} onChange={onChange(dispatch, `${path}.sides`)} min={3} max={24} step={1} />

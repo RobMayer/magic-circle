@@ -45,7 +45,7 @@ Drawing.defaultProps ={
 export const Interface = ({ layer, path, fromMask }) => {
     const dispatch = useContext(DispatchContext);
     return <Wrapper layer={layer} path={path} name='Arc' withVisibility>
-        <Prefabs.Radius label={"Radius"} value={layer.radius} dispatch={dispatch} path={`${path}.radius`} min={0} withScale />
+        <Prefabs.Length label={"Radius"} value={layer.radius} dispatch={dispatch} path={`${path}.radius`} min={0} withScale />
         <Field label={"Start θ"} tooltip={"Start Angle"}>
             <NumberInput value={layer.coverage.start} onChange={onChange(dispatch, `${path}.coverage.start`)} min={0} max={360} />
         </Field>

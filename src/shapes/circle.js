@@ -32,7 +32,7 @@ Drawing.defaultProps = {
 export const Interface = ({ layer, path, fromMask }) => {
     const dispatch = useContext(DispatchContext);
     return <Wrapper layer={layer} path={path} name='Circle' withVisibility>
-        <Prefabs.Radius label={"Radius"} value={layer.radius} dispatch={dispatch} path={`${path}.radius`} min={0} withScale />
+        <Prefabs.Length label={"Radius"} value={layer.radius} dispatch={dispatch} path={`${path}.radius`} min={0} withScale />
         <Prefabs.Transforms layer={layer} path={path} dispatch={dispatch} />
         <Prefabs.Appearance layer={layer} path={path} dispatch={dispatch} withFill withStroke fromMask={fromMask} />
     </Wrapper>

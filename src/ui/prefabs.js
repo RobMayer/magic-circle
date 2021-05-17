@@ -15,21 +15,6 @@ export const Length = ({ value, path, dispatch, label, tooltip, valueField = "va
     </Field>
 }
 
-export const Radius = ({ value, path, dispatch, label = "Radius", tooltip, withScribe, withScale }) => {
-    return <Field label={label} tooltip={tooltip} columns={`2.5fr 1fr ${withScribe ? "2fr" : ""} ${withScale ? "min-content" : ""}`}>
-        <NumberInput value={value.value} onChange={onChange(dispatch, `${path}.value`)} step={0.001} min={0} />
-        <UnitDropdown value={value.unit} onChange={onChange(dispatch, `${path}.unit`)} />
-        { withScribe ?
-            <Dropdown value={value.scribe} onChange={onChange(dispatch, `${path}.scribe`)}>
-                <option value={'circumscribe'}>Circumscribe</option>
-                <option value={'inscribe'}>Inscribe</option>
-                <option value={'middle'}>Middle</option>
-            </Dropdown>
-        : null}
-        { withScale ? <Checkbox value={value.useScale} onChange={onValue(dispatch, `${path}.useScale`)} title={"Use Scale Factor"} /> : null }
-    </Field>
-}
-
 export const Transforms = ({ layer, path, dispatch, withRotation }) => {
     return <Field.Group label={withRotation ? "Position & Rotation" : "Position"}>
         <Tabs value={layer.posMode} onChange={onValue(dispatch, `${path}.posMode`)}>
@@ -92,8 +77,7 @@ export const Appearance = ({ layer, path, dispatch, withStroke, withFill, fromMa
 const output = {
     Transforms,
     Appearance,
-    Length,
-    Radius
+    Length
 }
 
 export default output;

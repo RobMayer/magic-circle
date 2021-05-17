@@ -89,6 +89,7 @@ export const LAYERS = {
                 y: checkLength(data, [...path, 'y'], 0, 96),
                 rotation: checkValue(data, [...path, 'rotation'], 0, isNumber),
                 radius: checkPolygonRadius(data, [...path, 'radius'], 1.5, 96, true, isGTE(0)),
+                scribeMode: checkValue(data, [...path, "scribeMode"], "circumscribe", isLegacy([...path, "radius", "scribe"]), isEnum("circumscribe", "inscribe", "middle")),
                 sides: checkValue(data, [...path, 'sides'], 5, isInteger, isGTE(3), isLTE(24)),
                 thetaCurve: checkValue(data, [...path, 'thetaCurve'], "linear", isEnum(...CURVES)),
                 stroke: checkStroke(data, [...path, 'stroke']),
@@ -112,6 +113,7 @@ export const LAYERS = {
                 y: checkLength(data, [...path, 'y'], 0, 96),
                 rotation: checkValue(data, [...path, 'rotation'], 0, isNumber),
                 radius: checkPolygonRadius(data, [...path, 'radius'], 1.5, 96, true, isGTE(0)),
+                scribeMode: checkValue(data, [...path, "scribeMode"], "circumscribe", isLegacy([...path, "radius", "scribe"]), isEnum("circumscribe", "inscribe", "middle")),
                 sides: checkValue(data, [...path, 'sides'], 5, isInteger, isGTE(5), isLTE(24)),
                 skip: checkValue(data, [...path, 'skip'], 1, isInteger, isGTE(0), isLTE(Math.ceil(checkValue(data, [...path, 'sides'], 5, isGTE(5), isLTE(24)) / 2) - 2)),
                 thetaCurve: checkValue(data, [...path, 'thetaCurve'], "linear", isEnum(...CURVES)),
@@ -174,6 +176,34 @@ export const LAYERS = {
                     start: checkValue(data, [...path, 'coverage', 'start'], 0, isLTE(360), isGTE(0)),
                     end: checkValue(data, [...path, 'coverage', 'end'], 60, isLTE(360), isGTE(0)),
                 },
+                stroke: checkStroke(data, [...path, 'stroke']),
+                fill: checkFill(data, [...path, 'fill'])
+            }
+        }
+    },
+    star: {
+        term: "Star",
+        category: "shape",
+        validate: (data, path) => {
+            return {
+                type: "star",
+                name: checkValue(data, [...path, "name"], "", isString),
+                isOpen: checkValue(data, [...path, "isOpen"], true, isBoolean),
+                visible: checkValue(data, [...path, "visible"], true, isBoolean),
+                posMode: checkValue(data, [...path, "posMode"], "polar", isEnum("cartesian", "polar")),
+                r: checkLength(data, [...path, 'r'], 0, 96),
+                t: checkValue(data, [...path, 't'], 0, isNumber),
+                x: checkLength(data, [...path, 'x'], 0, 96),
+                y: checkLength(data, [...path, 'y'], 0, 96),
+                rotation: checkValue(data, [...path, 'rotation'], 0, isNumber),
+                points: checkValue(data, [...path, 'points'], 5, isInteger),
+                scribeMode: checkValue(data, [...path, 'scribeMode'], 'circumscribe', isEnum('circumscribe', 'inscribe', 'middle')),
+                radialMode: checkValue(data, [...path, 'radialMode'], 'innerouter', isEnum("radiusspread", "innerouter")),
+                inner: checkLengthWithScale(data, [...path, 'inner'], 0.75, 96, true, isNumber),
+                outer: checkLengthWithScale(data, [...path, 'outer'], 2, 96, true, isNumber),
+                radius: checkLengthWithScale(data, [...path, 'radius'], 1.5, 96, true, isNumber),
+                spread: checkLengthWithScale(data, [...path, 'spread'], 0.5, 96, true, isNumber),
+                thetaCurve: checkValue(data, [...path, 'thetaCurve'], "linear", isEnum(...CURVES)),
                 stroke: checkStroke(data, [...path, 'stroke']),
                 fill: checkFill(data, [...path, 'fill'])
             }
@@ -253,6 +283,7 @@ export const LAYERS = {
                 y: checkLength(data, [...path, 'y'], 0, 96),
                 rotation: checkValue(data, [...path, 'rotation'], 0, isNumber),
                 radius: checkPolygonRadius(data, [...path, 'radius'], 1.5, 96, true, isGTE(0)),
+                scribeMode: checkValue(data, [...path, "scribeMode"], "circumscribe", isLegacy([...path, "radius", "scribe"]), isEnum("circumscribe", "inscribe", "middle")),
                 count: checkValue(data, [...path, 'count'], 5, isInteger),
                 scaleFactor: {
                     start: checkValue(data, [...path, 'scaleFactor', 'start'], 1, isNumber),
@@ -312,6 +343,9 @@ export const isGTE = (c) => { return a => Number(a) >= c ? Number(a) : undefined
 export const isLTE = (c) => { return a => Number(a) <= c ? Number(a) : undefined }
 export const isArray = a => Array.isArray(a) ? a : undefined;
 export const isInteger = a => !isNaN(Number(a)) ? Math.round(a) : undefined;
+export const isLegacy = (path) => {
+    return (a, data) => a ?? get(path, undefined)
+}
 export const isBoolean = (a) => {
     if (a === true) { return true; }
     if (a === false) { return false; }
@@ -327,7 +361,7 @@ export const isBoolean = (a) => {
 const checkValue = (data, path, fallback, ...funcs) => {
     const t = funcs.reduce((acc, func) => {
         if (acc === undefined) { return undefined; }
-        return func(acc);
+        return func(acc, data);
     }, get(data, path));
     if (t === undefined) {
         return fallback;
@@ -356,8 +390,7 @@ const checkPolygonRadius = (data, path, valueFB, unitFB, scaleFB, ...funcs) => {
     return {
         value: checkValue(data, [...path, "value"], valueFB, ...funcs),
         unit: checkValue(data, [...path, "unit"], unitFB, isEnum(1, 96, 2.54, 25.4)),
-        useScale: checkValue(data, [...path, "useScale"], scaleFB, isBoolean),
-        scribe: checkValue(data, [...path, "scribe"], "circumscribe", isEnum("circumscribe", "inscribe", "middle"))
+        useScale: checkValue(data, [...path, "useScale"], scaleFB, isBoolean)
     }
 }
 

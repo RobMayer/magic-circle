@@ -38,11 +38,11 @@ export const Interface = ({ layer, path, fromMask }) => {
     return <Wrapper layer={layer} path={path} name='Ring' withVisibility>
         <Tabs value={layer.radialMode} onChange={onValue(dispatch, `${path}.radialMode`)}>
             <Tabs.Option value={"innerouter"} label={"Inner / Outer"}>
-                <Prefabs.Radius label={"Radius (Inner)"} value={layer.inner} dispatch={dispatch} path={`${path}.inner`} withScale />
-                <Prefabs.Radius label={"Radius (Outer)"} value={layer.outer} dispatch={dispatch} path={`${path}.outer`} withScale />
+                <Prefabs.Length label={"Radius (Inner)"} value={layer.inner} dispatch={dispatch} path={`${path}.inner`} min={0} withScale />
+                <Prefabs.Length label={"Radius (Outer)"} value={layer.outer} dispatch={dispatch} path={`${path}.outer`} min={0} withScale />
             </Tabs.Option>
             <Tabs.Option value={"radiusspread"} label={"Radius / Spread"}>
-                <Prefabs.Radius label={"Radius"} value={layer.radius} dispatch={dispatch} path={`${path}.radius`} withScale />
+                <Prefabs.Length label={"Radius"} value={layer.radius} dispatch={dispatch} path={`${path}.radius`} min={0} withScale />
                 <Prefabs.Length label={"Spread"} value={layer.spread} dispatch={dispatch} path={`${path}.spread`} min={0} withScale />
             </Tabs.Option>
         </Tabs>

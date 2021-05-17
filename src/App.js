@@ -10,7 +10,7 @@ import { saveAs } from 'file-saver';
 import { validateUpload } from './util/validation';
 import Icon from './ui/icon';
 
-const version = "0.1.4";
+const version = "0.2.0";
 
 const handleUpload = (element, file, dispatch) => {
     if (file) {

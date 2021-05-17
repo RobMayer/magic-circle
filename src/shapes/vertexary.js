@@ -18,7 +18,7 @@ const getRadius = (radius, scribe, sides) => {
     }
 }
 
-export const Drawing = ({ path, posMode, x, y, r, t, rotation, radius, thetaMode, count, layers, scaleCurve, thetaCurve, scaleFactor, scale, visible, renderAsMask }) => {
+export const Drawing = ({ path, posMode, x, y, r, t, rotation, radius, scribeMode, thetaMode, count, layers, scaleCurve, thetaCurve, scaleFactor, scale, visible, renderAsMask }) => {
     if (!visible) { return null }
     if (count <= 0 || layers.length <= 0) {
         return null;
@@ -26,7 +26,7 @@ export const Drawing = ({ path, posMode, x, y, r, t, rotation, radius, thetaMode
 
     const cx = posMode === 'cartesian' ? x.value * x.unit : (r.value * r.unit) * Math.cos((-t + 90) * Math.PI / 180);
     const cy = posMode === 'cartesian' ? y.value * y.unit : (r.value * r.unit) * Math.sin((-t + 90) * Math.PI / 180);
-    const rad = getRadius(radius.value * radius.unit * (radius.useScale ? scale : 1), radius.scribe, count);
+    const rad = getRadius(radius.value * radius.unit * (radius.useScale ? scale : 1), scribeMode, count);
 
     const children = range(count).map((n) => {
         const coeff = Interpolation.lerp(Interpolation.delerp(n, 0, count), 0, 360, thetaCurve) - 180;
@@ -49,7 +49,14 @@ export const Interface = ({ layer, path, fromMask }) => {
         <Field label={"Count"}>
             <NumberInput value={layer.count} onChange={onChange(dispatch, `${path}.count`)} min={0} />
         </Field>
-        <Prefabs.Radius label={"Radius"} value={layer.radius} dispatch={dispatch} path={`${path}.radius`} withScribe withScale />
+        <Prefabs.Length label={"Radius"} value={layer.radius} dispatch={dispatch} path={`${path}.radius`} min={0} withScale />
+        <Field label={"Scribe Mode"}>
+            <Dropdown value={layer.scribeMode} onChange={onChange(dispatch, `${path}.scribeMode`)}>
+                <option value={'circumscribe'}>Circumscribe</option>
+                <option value={'inscribe'}>Inscribe</option>
+                <option value={'middle'}>Middle</option>
+            </Dropdown>
+        </Field>
         <Field label={"Distribution"}>
             <Dropdown value={layer.thetaCurve} onChange={onChange(dispatch, `${path}.thetaCurve`)}>
                 {Object.keys(Interpolation.curves).map((curve) => {

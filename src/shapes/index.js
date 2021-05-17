@@ -10,6 +10,7 @@ import VertexAry from './vertexary';
 import Mask from './mask';
 import Note from './note';
 import Group from './group';
+import Star from './star';
 
 export const Drawing = ({ path, ...layer }) => {
     switch (layer.type) {
@@ -24,6 +25,7 @@ export const Drawing = ({ path, ...layer }) => {
         case "radialary": return <RadialAry.Drawing {...layer} path={path} />;
         case "mask": return <Mask.Drawing {...layer} path={path} />;
         case "group": return <Group.Drawing {...layer} path={path} />;
+        case "star": return <Star.Drawing {...layer} path={path} />;
         default: return null;
     }
 }
@@ -42,6 +44,7 @@ export const Interface = ({ path, fromMask, ...layer }) => {
         case "mask": return <Mask.Interface layer={layer} path={path} fromMask={fromMask} />
         case "group": return <Group.Interface layer={layer} path={path} fromMask={fromMask} />
         case "note": return <Note.Interface layer={layer} path={path} />
+        case "star": return <Star.Interface layer={layer} path={path} />
         default: return null;
     }
 }
