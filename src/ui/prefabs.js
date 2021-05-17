@@ -11,12 +11,12 @@ export const Length = ({ value, path, dispatch, label, tooltip, valueField = "va
     return <Field label={label} tooltip={tooltip} columns={`2.5fr 1fr ${withScale ? "min-content" : ""}`}>
         <NumberInput value={value[valueField]} onChange={onChange(dispatch, `${path}.${valueField}`)} step={0.001} min={min} />
         <UnitDropdown value={value[unitField]} onChange={onChange(dispatch, `${path}.${unitField}`)} />
-        { withScale ?  <Checkbox value={value[scaleField]} onChange={onValue(dispatch, `${path}.${scaleField}`)} title={"Use Scale Factor"} /> : null }
+        { withScale ?  <Checkbox value={value[scaleField]} onChange={onValue(dispatch, `${path}.${scaleField}`)} title={"Use Parent's Scale Factor"} /> : null }
     </Field>
 }
 
-export const Transforms = ({ layer, path, dispatch, withRotation }) => {
-    return <Field.Group label={withRotation ? "Position & Rotation" : "Position"}>
+export const Transforms = ({ layer, path, dispatch, withRotation, withScale }) => {
+    return <Field.Group label={withRotation && withScale ? "Transforms" : withScale ? "Position & Scale" : withRotation ? "Position & Rotation" : "Position"}>
         <Tabs value={layer.posMode} onChange={onValue(dispatch, `${path}.posMode`)}>
             <Tabs.Option value={"polar"} label={"Polar"}>
                 <Field.Row>
@@ -36,6 +36,11 @@ export const Transforms = ({ layer, path, dispatch, withRotation }) => {
         { withRotation ?
             <Field label={"Rotation"}>
                 <NumberInput value={layer.rotation} onChange={onChange(dispatch, `${path}.rotation`)} step={0.001} />
+            </Field>
+        : null}
+        { withScale ?
+            <Field label={"Scale"}>
+                <NumberInput value={layer.s} onChange={onChange(dispatch, `${path}.s`)} step={0.001} />
             </Field>
         : null}
     </Field.Group>

@@ -6,7 +6,7 @@ import Field from '../ui/field';
 import BlockInput from '../ui/blockinput';
 import Warning from '../ui/warning';
 
-export const Drawing = ({ path, posMode, x, y, r, t, rotation, definition, fill, stroke, scale, visible, renderAsMask }) => {
+export const Drawing = ({ path, posMode, x, y, r, t, s, rotation, definition, fill, stroke, scale, visible, renderAsMask }) => {
     const colors = useContext(ColorContext);
     if (!visible) { return null }
     const cx = posMode === 'cartesian' ? x.value * x.unit : (r.value * r.unit) * Math.cos((-t + 90) * Math.PI / 180);
@@ -14,8 +14,8 @@ export const Drawing = ({ path, posMode, x, y, r, t, rotation, definition, fill,
     const styles = {
         fill: fill.option === "none" ? "none" : colors[fill.option] ?? fill.color,
         stroke: stroke.option === "none" ? "none" : colors[stroke.option] ?? stroke.color,
-        strokeWidth: (stroke.value * stroke.unit * (stroke.useScale ? scale : 1)),
-        transform: `translate(${cx}px,${-cy}px) rotate(${rotation}deg)`
+        strokeWidth: (stroke.value * stroke.unit * (1 / s) * (stroke.useScale ? scale : 1)),
+        transform: `translate(${cx}px,${-cy}px) rotate(${rotation}deg) scale(${s})`
     }
     if (renderAsMask === "inverted") {
         styles.fill = fill.option === "foreground" ? "#000" : fill.option === "background" ? "#fff" : "none";
@@ -42,7 +42,7 @@ export const Interface = ({ layer, path, fromMask }) => {
         <Field label={"Definition"}>
             <BlockInput value={layer.definition} onChange={onChange(dispatch, `${path}.definition`)} />
         </Field>
-        <Prefabs.Transforms layer={layer} path={path} dispatch={dispatch} withRotation />
+        <Prefabs.Transforms layer={layer} path={path} dispatch={dispatch} withRotation withScale />
         <Prefabs.Appearance layer={layer} path={path} dispatch={dispatch} withFill withStroke fromMask={fromMask} />
     </Wrapper>
 }

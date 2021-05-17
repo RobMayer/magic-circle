@@ -224,6 +224,7 @@ export const LAYERS = {
                 t: checkValue(data, [...path, 't'], 0, isNumber),
                 x: checkLength(data, [...path, 'x'], 0, 96),
                 y: checkLength(data, [...path, 'y'], 0, 96),
+                s: checkValue(data, [...path, 's'], 1, isNumber),
                 rotation: checkValue(data, [...path, 'rotation'], 0, isNumber),
                 definition: checkValue(data, [...path, 'definition'], "", isString),
                 stroke: checkStroke(data, [...path, 'stroke']),
