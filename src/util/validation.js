@@ -209,6 +209,28 @@ export const LAYERS = {
             }
         }
     },
+    path: {
+        term: "Path",
+        warning: "Proceed with Caution!",
+        category: "shape",
+        validate: (data, path) => {
+            return {
+                type: "path",
+                name: checkValue(data, [...path, "name"], "", isString),
+                isOpen: checkValue(data, [...path, "isOpen"], true, isBoolean),
+                visible: checkValue(data, [...path, "visible"], true, isBoolean),
+                posMode: checkValue(data, [...path, "posMode"], "polar", isEnum("cartesian", "polar")),
+                r: checkLength(data, [...path, 'r'], 0, 96),
+                t: checkValue(data, [...path, 't'], 0, isNumber),
+                x: checkLength(data, [...path, 'x'], 0, 96),
+                y: checkLength(data, [...path, 'y'], 0, 96),
+                rotation: checkValue(data, [...path, 'rotation'], 0, isNumber),
+                definition: checkValue(data, [...path, 'definition'], "", isString),
+                stroke: checkStroke(data, [...path, 'stroke']),
+                fill: checkFill(data, [...path, 'fill'])
+            }
+        }
+    },
     group: {
         term: "Group",
         category: "collection",

@@ -1,5 +1,5 @@
 import { useContext } from 'react';
-import { DispatchContext, CanvasContext } from '../contexts';
+import { DispatchContext, ColorContext } from '../contexts';
 import { Wrapper, onChange } from '../ui/common';
 import Prefabs from '../ui/prefabs';
 import SliderInput from '../ui/sliderinput';
@@ -22,7 +22,7 @@ const getRadius = (radius, scribe, sides) => {
 }
 
 export const Drawing = ({ path, posMode, x, y, r, t, radius, scribeMode, sides, skip, fill, rotation, stroke, thetaCurve, scale, visible, renderAsMask }) => {
-    const canvas = useContext(CanvasContext);
+    const colors = useContext(ColorContext);
     if (!visible) { return null }
     skip = Number(skip);
     if (isNaN(skip)) {
@@ -39,8 +39,8 @@ export const Drawing = ({ path, posMode, x, y, r, t, radius, scribeMode, sides, 
         return `${rad * Math.cos(deg2rad(i - 90))},${rad * Math.sin(deg2rad(i - 90))}`
     }).join(" ");
     const styles = {
-        fill: fill.option === "none" ? "none" : canvas[fill.option] ?? fill.color,
-        stroke: stroke.option === "none" ? "none" : canvas[stroke.option] ?? stroke.color,
+        fill: fill.option === "none" ? "none" : colors[fill.option] ?? fill.color,
+        stroke: stroke.option === "none" ? "none" : colors[stroke.option] ?? stroke.color,
         strokeWidth: (stroke.value * stroke.unit * (stroke.useScale ? scale : 1)),
         transform: `translate(${cx}px, ${-cy}px) rotate(${rotation}deg)`
     }

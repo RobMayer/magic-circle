@@ -1,5 +1,5 @@
 import { useContext } from 'react';
-import { DispatchContext, CanvasContext } from '../contexts';
+import { DispatchContext, ColorContext } from '../contexts';
 import { Wrapper, onChange, onValue } from '../ui/common';
 import Prefabs from '../ui/prefabs';
 import Field from '../ui/field';
@@ -7,14 +7,14 @@ import Tabs from '../ui/tabs';
 import NumberInput from '../ui/numberinput';
 
 export const Drawing = ({ path, posMode, x1, y1, r1, t1, x2, y2, r2, t2, rotation, radialMode, radius, pie, coverage, fill, stroke, scale, visible, renderAsMask }) => {
-    const canvas = useContext(CanvasContext);
+    const colors = useContext(ColorContext);
     if (!visible) { return null }
     const sx = posMode === 'cartesian' ? x1.value * x1.unit : (r1.value * r1.unit) * Math.cos((-t1 + 90) * Math.PI / 180);
     const sy = posMode === 'cartesian' ? y1.value * y1.unit : (r1.value * r1.unit) * Math.sin((-t1 + 90) * Math.PI / 180);
     const ex = posMode === 'cartesian' ? x2.value * x2.unit : (r2.value * r2.unit) * Math.cos((-t2 + 90) * Math.PI / 180);
     const ey = posMode === 'cartesian' ? y2.value * y2.unit : (r2.value * r2.unit) * Math.sin((-t2 + 90) * Math.PI / 180);
     const styles = {
-        stroke: stroke.option === "none" ? "none" : canvas[stroke.option] ?? stroke.color,
+        stroke: stroke.option === "none" ? "none" : colors[stroke.option] ?? stroke.color,
         strokeWidth: (stroke.value * stroke.unit * (stroke.useScale ? scale : 1))
     }
     if (renderAsMask === "inverted") {

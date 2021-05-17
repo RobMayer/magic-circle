@@ -23,16 +23,19 @@ const NewLayer = ({ path }) => {
                 <button className='bad-symbol' onClick={(e) => { setIsOpen(false); }}><Icon.CLOSE /></button>
             </div>
             <Field.SubHeading>Shapes</Field.SubHeading>
-            {Object.entries(LAYERS).filter(([type, { category }]) => category === "shape").map(([ type, { term, validate } ]) => {
-                return <button className='good' key={type} onClick={(e) => { dispatch({ action: "append", path, value: validate({}, []) }); setIsOpen(false); }}>{term}</button>
+            {Object.entries(LAYERS).filter(([type, { category }]) => category === "shape").map(([ type, { term, validate, warning } ]) => {
+                const wrn = warning ? <Icon.WARNING className={'newlayer_warning'} tooltip={warning} /> : null;
+                return <button className='good' key={type} onClick={(e) => { dispatch({ action: "append", path, value: validate({}, []) }); setIsOpen(false); }}>{wrn}{term}</button>
             })}
             <Field.SubHeading>Collections</Field.SubHeading>
-            {Object.entries(LAYERS).filter(([type, { category }]) => category === "collection").map(([ type, { term, validate } ]) => {
-                return <button className='good' key={type} onClick={(e) => { dispatch({ action: "append", path, value: validate({}, []) }); setIsOpen(false); }}>{term}</button>
+            {Object.entries(LAYERS).filter(([type, { category }]) => category === "collection").map(([ type, { term, validate, warning } ]) => {
+                const wrn = warning ? <Icon.WARNING className={'newlayer_warning'} tooltip={warning} /> : null;
+                return <button className='good' key={type} onClick={(e) => { dispatch({ action: "append", path, value: validate({}, []) }); setIsOpen(false); }}>{wrn}{term}</button>
             })}
             <Field.SubHeading>Utility</Field.SubHeading>
-            {Object.entries(LAYERS).filter(([type, { category }]) => category === "utility").map(([ type, { term, validate } ]) => {
-                return <button className='good' key={type} onClick={(e) => { dispatch({ action: "append", path, value: validate({}, []) }); setIsOpen(false); }}>{term}</button>
+            {Object.entries(LAYERS).filter(([type, { category }]) => category === "utility").map(([ type, { term, validate, warning } ]) => {
+                const wrn = warning ? <Icon.WARNING className={'newlayer_warning'} tooltip={warning} /> : null;
+                return <button className='good' key={type} onClick={(e) => { dispatch({ action: "append", path, value: validate({}, []) }); setIsOpen(false); }}>{wrn}{term}</button>
             })}
             </>
         :

@@ -1,16 +1,16 @@
 import { useContext } from 'react';
-import { DispatchContext, CanvasContext } from '../contexts';
+import { DispatchContext, ColorContext } from '../contexts';
 import { Wrapper } from '../ui/common';
 import Prefabs from '../ui/prefabs';
 
 export const Drawing = ({ path, posMode, x, y, r, t, radius, fill, stroke, scale, visible, renderAsMask }) => {
-    const canvas = useContext(CanvasContext);
+    const colors = useContext(ColorContext);
     if (!visible) { return null }
     const cx = posMode === 'cartesian' ? x.value * x.unit : (r.value * r.unit) * Math.cos((-t + 90) * Math.PI / 180);
     const cy = posMode === 'cartesian' ? y.value * y.unit : (r.value * r.unit) * Math.sin((-t + 90) * Math.PI / 180);
     const styles = {
-        fill: fill.option === "none" ? "none" : canvas[fill.option] ?? fill.color,
-        stroke: stroke.option === "none" ? "none" : canvas[stroke.option] ?? stroke.color,
+        fill: fill.option === "none" ? "none" : colors[fill.option] ?? fill.color,
+        stroke: stroke.option === "none" ? "none" : colors[stroke.option] ?? stroke.color,
         strokeWidth: (stroke.value * stroke.unit * (stroke.useScale ? scale : 1)),
         transform: `translate(${cx}px,${-cy}px)`
     }

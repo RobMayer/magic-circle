@@ -1,7 +1,7 @@
 import { useState, useReducer } from 'react';
 import _ from 'lodash/fp';
 import LayerList from './shapes/layerlist';
-import { DispatchContext, ClipboardContext, CanvasContext } from './contexts';
+import { DispatchContext, ClipboardContext, ColorContext, CanvasContext } from './contexts';
 import Field from './ui/field';
 import ColorInput from './ui/colorinput';
 import TextInput from './ui/textinput';
@@ -104,13 +104,13 @@ function App() {
 
     return <div id="app">
         <div id="viewport" style={{ backgroundColor: state.colors.viewport }}>
-            <CanvasContext.Provider value={state.colors}>
+            <ColorContext.Provider value={state.colors}>
                 <div id="canvas" style={{ maxWidth: `${rH}vh`, height:`${rW}vw` }}>
                     <svg id="export" viewBox={`${cw / -2} ${ch / -2} ${cw} ${ch}`} style={{ backgroundColor: state.colors.canvas }}>
                         <LayerList.Drawing layers={state.layers} path="layers" />
                     </svg>
                 </div>
-            </CanvasContext.Provider>
+            </ColorContext.Provider>
         </div>
         <div id='toggle'>
             <button onClick={() => { setIsOpen(!isOpen) }}>{isOpen ? <Icon.ARROW_E /> : <Icon.ARROW_W />}</button>
@@ -181,9 +181,11 @@ function App() {
                 </div>
                 <Field.Heading>Layers</Field.Heading>
                 <DispatchContext.Provider value={dispatch}>
-                    <ClipboardContext.Provider value={clipboard}>
-                        <LayerList.Interface layers={state.layers} path="layers" />
-                    </ClipboardContext.Provider>
+                    <CanvasContext.Provider value={state.dimensions}>
+                        <ClipboardContext.Provider value={clipboard}>
+                            <LayerList.Interface layers={state.layers} path="layers" />
+                        </ClipboardContext.Provider>
+                    </CanvasContext.Provider>
                 </DispatchContext.Provider>
             </div>
         : null }

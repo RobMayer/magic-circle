@@ -1,5 +1,5 @@
 import { useContext } from 'react';
-import { DispatchContext, CanvasContext } from '../contexts';
+import { DispatchContext, ColorContext } from '../contexts';
 import { Wrapper, onChange, onValue } from '../ui/common';
 import Prefabs from '../ui/prefabs';
 import Checkbox from '../ui/checkbox';
@@ -11,7 +11,7 @@ import Dropdown from '../ui/dropdown';
 import Interpolation from '../util/interpolation';
 
 export const Drawing = ({ path, posMode, x, y, r, t, fill, stroke, rotation, radialMode, inner, outer, radius, spread, thetaMode, count, step, coverage, toExtent, thetaCurve, scale, visible, renderAsMask }) => {
-    const canvas = useContext(CanvasContext);
+    const colors = useContext(ColorContext);
     // thetaMode determines how objects are thrown around the circumference
     // radialMode determines the inner and outer radius of
     const cx = posMode === 'cartesian' ? x.value * x.unit : (r.value * r.unit) * Math.cos((-t + 90) * Math.PI / 180);
@@ -21,7 +21,7 @@ export const Drawing = ({ path, posMode, x, y, r, t, fill, stroke, rotation, rad
         return null;
     }
     const styles = {
-        stroke: stroke.option === "none" ? "none" : canvas[stroke.option] ?? stroke.color,
+        stroke: stroke.option === "none" ? "none" : colors[stroke.option] ?? stroke.color,
         strokeWidth: (stroke.value * stroke.unit * (stroke.useScale ? scale : 1))
     }
     if (renderAsMask === "inverted") {

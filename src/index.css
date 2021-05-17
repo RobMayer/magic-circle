@@ -8,6 +8,10 @@ body {
     user-select: none;
 }
 
+.selectable {
+    user-select: text;
+}
+
 textarea,
 select,
 input[type=number],
@@ -72,6 +76,8 @@ button {
     min-width: 1.5em;
     cursor: pointer;
     position: relative;
+    display: inline-flex;
+    justify-content: center;
 }
 
 input[type=file] {
@@ -478,15 +484,55 @@ input.layername_field {
 
 .icon {
     width: 1.2em;
-    height: 1.2em;
+    height: 1em;
     display: inline-grid;
     vertical-align: baseline;
+    position: relative;
+    align-content: center;
+    justify-content: center;
 }
 .icon.large {
-    width: 2.4em;
-    height: 2.4em;
+    font-size: 200%;
 }
 
 .icon svg {
+    position: absolute;
+    top: -0.1em;
+    bottom: -0.1em;
+    left: 0;
+    right: 0;
+    width: 1.2em;
+    height: 1.2em;
     fill: currentColor;
+}
+
+.warning {
+    border: 1px solid #fc3;
+    font-size: 10pt;
+}
+
+.warning_label {
+    padding: 4px;
+    background: #541;
+    color: white;
+    font-size: 12pt;
+    font-variant: small-caps;
+}
+
+.warning_content {
+    padding: 8px;
+}
+
+p {
+    margin-bottom: 0.5em;
+}
+p:last-child {
+    margin-bottom: 0;
+}
+.warning .highlight {
+    color: #fc3;
+}
+
+.newlayer_warning {
+    margin: 0 4px;
 }
