@@ -1,4 +1,8 @@
 const changelog = [
+    { version: "0.5.0", items: [
+        "Changed how the 'Pen' filter renders for the sake of higher resolutions - re-saving may be necessary.",
+        "Added Export to PNG"
+    ]},
     { version: "0.4.0", items: [
         "Added Effects Layer with several effect types",
         "Added Recolor Layer",

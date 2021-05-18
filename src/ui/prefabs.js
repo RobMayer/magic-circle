@@ -79,6 +79,8 @@ export const Appearance = ({ layer, path, dispatch, withStroke, withFill, fromMa
     return null;
 }
 
+
+
 const output = {
     Transforms,
     Appearance,

@@ -25,7 +25,7 @@ export const EFFECTS = {
                 nib: checkLength(data, [...path, 'nib'], 1, 1),
                 seed: checkValue(data, [...path, 'seed'], Math.round(Math.random() * 1000), isInteger),
                 smudge: checkValue(data, [...path, 'smudge'], 0.2, isGTE(0), isLTE(1)),
-                spatter: checkValue(data, [...path, 'spatter'], 0, isGTE(0), isLTE(1))
+                jitter: checkValue(data, [...path, 'jitter'], 0.5, isGTE(0), isLTE(1))
             }
         }
     },

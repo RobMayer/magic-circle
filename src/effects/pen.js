@@ -7,14 +7,14 @@ import { DispatchContext } from '../contexts';
 import { EffectWrapper } from '../ui/common';
 import Prefabs from '../ui/prefabs';
 
-export const Drawing = ({ path, children, seed, smudge, spatter, nib }) => {
+export const Drawing = ({ path, children, seed, smudge, nib, jitter }) => {
     const effectId = path.join("_");
     return <>
-        <filter id={`${effectId}`} filterUnits="userSpaceOnUse" width="200%" height="200%" x="-100%" y="-100%">
-            <feTurbulence type="fractalNoise" baseFrequency={2} numOctaves="1" result='fractal' seed={seed} />
-            <feGaussianBlur stdDeviation={1 - spatter} result='fractal' />
+        <filter id={`${effectId}`} filterUnits="objectBoundingBox" >
+            <feTurbulence type="fractalNoise" baseFrequency={1} numOctaves="20" result='fractal' seed={seed} stitchTiles="stitch" />
+            <feGaussianBlur stdDeviation={0.75} result='fractal' />
             <feMorphology in="SourceGraphic" radius={nib.value * nib.unit / 4} operator="dilate" />
-            <feDisplacementMap in2="fractal" scale={20} xChannelSelector="R" yChannelSelector="G" />
+            <feDisplacementMap in2="fractal" scale={5 + jitter * 15} xChannelSelector="R" yChannelSelector="G" />
             <feGaussianBlur stdDeviation={smudge} result='fractal' />
             <feMorphology radius={nib.value * nib.unit / 4} operator="erode" />
             <feBlend in2="SourceGraphic" />
@@ -33,9 +33,9 @@ export const Interface = ({ definition, path }) => {
             <SliderInput value={definition.smudge} onChange={onChange(dispatch, [...path, 'smudge'])} min={0} max={1} step={0.01} />
             <NumberInput value={definition.smudge} onChange={onChange(dispatch, [...path, 'smudge'])} step={0.01} />
         </Field>
-        <Field label={"Spatter"}>
-            <SliderInput value={definition.spatter} onChange={onChange(dispatch, [...path, 'spatter'])} min={0} max={1} step={0.01} />
-            <NumberInput value={definition.spatter} onChange={onChange(dispatch, [...path, 'spatter'])} step={0.01} />
+        <Field label={"Jitter"}>
+            <SliderInput value={definition.jitter} onChange={onChange(dispatch, [...path, 'jitter'])} min={0} max={1} step={0.01} />
+            <NumberInput value={definition.jitter} onChange={onChange(dispatch, [...path, 'jitter'])} step={0.01} />
         </Field>
         <Prefabs.Length label={"Nib"} dispatch={dispatch} value={definition.nib} path={[...path, 'nib']} />
     </EffectWrapper>
