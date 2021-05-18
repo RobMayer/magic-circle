@@ -4,6 +4,7 @@ import { LayerWrapper } from '../ui/common';
 import Prefabs from '../ui/prefabs';
 
 export const Drawing = ({ path, posMode, x, y, r, t, radius, fill, stroke, scale, visible, renderAsMask, colors }) => {
+    console.log(colors);
     if (!visible) { return null }
     const cx = posMode === 'cartesian' ? x.value * x.unit : (r.value * r.unit) * Math.cos((-t + 90) * Math.PI / 180);
     const cy = posMode === 'cartesian' ? y.value * y.unit : (r.value * r.unit) * Math.sin((-t + 90) * Math.PI / 180);

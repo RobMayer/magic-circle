@@ -41,7 +41,7 @@ export const Drawing = ({ path, posMode, x, y, r, t, rotation, definition, showE
         </g>
     } else {
         const layerChildren = layers.map((layer, i) => {
-            return <Shape.Drawing key={i} path={[...path, 'layers', i]} scale={scale} {...layer} renderAsMask={renderAsMask} />
+            return <Shape.Drawing key={i} path={[...path, 'layers', i]} scale={scale} {...layer} renderAsMask={renderAsMask} colors={colors} />
         });
         return <g style={{ transform: `translate(${cx}px, ${-cy}px) rotate(${rotation}deg)` }}>
             <g>{layerChildren}</g>

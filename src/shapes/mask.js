@@ -13,7 +13,7 @@ export const Drawing = ({ path, posMode, x, y, r, t, rotation, masks, layers, sc
     const cy = posMode === 'cartesian' ? y.value * y.unit : (r.value * r.unit) * Math.sin((-t + 90) * Math.PI / 180);
     const maskId = [...path, 'mask'].join("_");
     const maskChildren = masks.map((layer, i) => {
-        return <Shape.Drawing key={i} path={[...path, 'masks', i]} scale={scale} {...layer} renderAsMask={invertMask ? "inverted" : "normal"} />
+        return <Shape.Drawing key={i} path={[...path, 'masks', i]} scale={scale} {...layer} renderAsMask={invertMask ? "inverted" : "normal"} colors={colors} />
     });
     const children = layers.map((layer, i) => {
         return <Shape.Drawing key={i} path={[...path, 'layers', i]} scale={scale} {...layer} renderAsMask={renderAsMask} colors={colors} />
