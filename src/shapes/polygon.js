@@ -1,6 +1,6 @@
 import { useContext } from 'react';
-import { DispatchContext, ColorContext } from '../contexts';
-import { Wrapper, onChange } from '../ui/common';
+import { DispatchContext } from '../contexts';
+import { LayerWrapper, onChange } from '../ui/common';
 import Prefabs from '../ui/prefabs';
 import SliderInput from '../ui/sliderinput';
 import NumberInput from '../ui/numberinput';
@@ -21,8 +21,7 @@ const getRadius = (radius, scribe, sides) => {
     }
 }
 
-export const Drawing = ({ path, posMode, x, y, r, t, radius, scribeMode, sides, fill, rotation, stroke, thetaCurve, scale, visible, renderAsMask }) => {
-    const colors = useContext(ColorContext);
+export const Drawing = ({ path, posMode, x, y, r, t, radius, scribeMode, sides, fill, rotation, stroke, thetaCurve, scale, visible, renderAsMask, colors }) => {
     if (!visible) { return null }
     const cx = posMode === 'cartesian' ? x.value * x.unit : (r.value * r.unit) * Math.cos((-t + 90) * Math.PI / 180);
     const cy = posMode === 'cartesian' ? y.value * y.unit : (r.value * r.unit) * Math.sin((-t + 90) * Math.PI / 180);
@@ -51,21 +50,21 @@ Drawing.defaultProps = {
 
 export const Interface = ({ layer, path, fromMask }) => {
     const dispatch = useContext(DispatchContext);
-    return <Wrapper layer={layer} path={path} name='Polygon' withVisibility>
-        <Prefabs.Length label={"Radius"} value={layer.radius} dispatch={dispatch} path={`${path}.radius`} min={0} withScale />
+    return <LayerWrapper layer={layer} path={path} name='Polygon' withVisibility>
+        <Prefabs.Length label={"Radius"} value={layer.radius} dispatch={dispatch} path={[...path, 'radius']} min={0} withScale />
         <Field label={"Scribe Mode"}>
-            <Dropdown value={layer.scribeMode} onChange={onChange(dispatch, `${path}.scribeMode`)}>
+            <Dropdown value={layer.scribeMode} onChange={onChange(dispatch, [...path, 'scribeMode'])}>
                 <option value={'circumscribe'}>Circumscribe</option>
                 <option value={'inscribe'}>Inscribe</option>
                 <option value={'middle'}>Middle</option>
             </Dropdown>
         </Field>
         <Field label={"Sides"} columns={"2fr 1fr"}>
-            <SliderInput value={layer.sides} onChange={onChange(dispatch, `${path}.sides`)} min={3} max={24} step={1} />
-            <NumberInput value={layer.sides} onChange={onChange(dispatch, `${path}.sides`)} min={3} max={24} step={1} />
+            <SliderInput value={layer.sides} onChange={onChange(dispatch, [...path, 'sides'])} min={3} max={24} step={1} />
+            <NumberInput value={layer.sides} onChange={onChange(dispatch, [...path, 'sides'])} min={3} max={24} step={1} />
         </Field>
         <Field label={"Distribution"}>
-            <Dropdown value={layer.thetaCurve} onChange={onChange(dispatch, `${path}.thetaCurve`)}>
+            <Dropdown value={layer.thetaCurve} onChange={onChange(dispatch, [...path, 'thetaCurve'])}>
                 {Object.keys(Interpolation.curves).map((curve) => {
                     return <option key={curve} value={curve}>{curve}</option>
                 })}
@@ -73,7 +72,7 @@ export const Interface = ({ layer, path, fromMask }) => {
         </Field>
         <Prefabs.Transforms layer={layer} path={path} dispatch={dispatch} withRotation />
         <Prefabs.Appearance layer={layer} path={path} dispatch={dispatch} withFill withStroke fromMask={fromMask} />
-    </Wrapper>
+    </LayerWrapper>
 }
 
 const output = {

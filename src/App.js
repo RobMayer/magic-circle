@@ -1,7 +1,7 @@
 import { useState, useReducer } from 'react';
 import _ from 'lodash/fp';
 import LayerList from './shapes/layerlist';
-import { DispatchContext, ClipboardContext, ColorContext, CanvasContext } from './contexts';
+import { DispatchContext, ClipboardContext, CanvasContext } from './contexts';
 import Field from './ui/field';
 import ColorInput from './ui/colorinput';
 import TextInput from './ui/textinput';
@@ -12,7 +12,7 @@ import Icon from './ui/icon';
 import optimize from 'svgo-browser/lib/optimize';
 import changelog from './changelog';
 
-const version = "0.3.2";
+const version = "0.4.0";
 
 const handleUpload = (element, file, dispatch) => {
     if (file) {
@@ -107,13 +107,11 @@ function App() {
 
     return <div id="app">
         <div id="viewport" style={{ backgroundColor: state.colors.viewport }}>
-            <ColorContext.Provider value={state.colors}>
-                <div id="canvas" style={{ maxWidth: `${rH}vh`, height:`${rW}vw` }}>
-                    <svg id="export" viewBox={`${cw / -2} ${ch / -2} ${cw} ${ch}`} style={{ backgroundColor: state.colors.canvas }}>
-                        <LayerList.Drawing layers={state.layers} path="layers" />
-                    </svg>
-                </div>
-            </ColorContext.Provider>
+            <div id="canvas" style={{ maxWidth: `${rH}vh`, height:`${rW}vw` }}>
+                <svg id="export" viewBox={`${cw / -2} ${ch / -2} ${cw} ${ch}`} style={{ backgroundColor: state.colors.canvas }}>
+                    <LayerList.Drawing layers={state.layers} path={["layers"]} colors={state.colors} />
+                </svg>
+            </div>
         </div>
         <div id='toggle'>
             <button onClick={() => { setIsOpen(!isOpen) }}>{isOpen ? <Icon.ARROW_E /> : <Icon.ARROW_W />}</button>
@@ -191,7 +189,7 @@ function App() {
                 <DispatchContext.Provider value={dispatch}>
                     <CanvasContext.Provider value={state.dimensions}>
                         <ClipboardContext.Provider value={clipboard}>
-                            <LayerList.Interface layers={state.layers} path="layers" />
+                            <LayerList.Interface layers={state.layers} path={["layers"]} />
                         </ClipboardContext.Provider>
                     </CanvasContext.Provider>
                 </DispatchContext.Provider>

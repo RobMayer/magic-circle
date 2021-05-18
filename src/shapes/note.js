@@ -1,7 +1,7 @@
 import { useContext } from 'react';
 import { DispatchContext } from '../contexts';
 import BlockInput from '../ui/blockinput';
-import { Wrapper } from '../ui/common';
+import { LayerWrapper } from '../ui/common';
 
 export const Drawing = (props) => {
     return null
@@ -9,11 +9,11 @@ export const Drawing = (props) => {
 
 export const Interface = ({ layer, path }) => {
     const dispatch = useContext(DispatchContext);
-    return <Wrapper layer={layer} path={path} name='Note'>
+    return <LayerWrapper layer={layer} path={path} name='Note'>
         <BlockInput value={layer.note} onChange={(e) => {
-            dispatch({ action: "edit", path: `${path}.note`, value: e.target.value})
+            dispatch({ action: "edit", path: [...path, 'node'], value: e.target.value})
         }} />
-    </Wrapper>
+    </LayerWrapper>
 }
 
 const output = {

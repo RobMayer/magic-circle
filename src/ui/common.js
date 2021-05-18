@@ -16,20 +16,33 @@ export const onValue = (dispatch, path) => {
     }
 }
 
-export const Wrapper = ({ name, layer, path, children, withVisibility }) => {
+export const EffectWrapper = ({ name, definition, path, children }) => {
+    const dispatch = useContext(DispatchContext);
+    return <div className='effect'>
+        <div className='effecttitle'>
+            <div className='effecttype'>{name}</div>
+            <button className='bad-symbol effectdel' onClick={(e) => { dispatch({ action: "edit", path, value: null }) }}><Icon.CLOSE /></button>
+        </div>
+        <div className='controls'>
+            {children}
+        </div>
+    </div>
+}
+
+export const LayerWrapper = ({ name, layer, path, children, withVisibility }) => {
     const dispatch = useContext(DispatchContext);
     const [,setClipboard] = useContext(ClipboardContext);
 
     const isOpen = layer.isOpen;
 
     return <div className='layer'>
-        <div className={`layertitle`}>
-            <div onClick={(e) => { dispatch({ action: 'edit', path: `${path}.isOpen`, value: !isOpen}) }} className='layerfold'>{isOpen ? <Icon.ARROW_S /> : <Icon.ARROW_E />}</div>
+        <div className='layertitle'>
+            <div onClick={(e) => { dispatch({ action: 'edit', path: [...path, 'isOpen'], value: !isOpen}) }} className='layerfold'>{isOpen ? <Icon.ARROW_S /> : <Icon.ARROW_E />}</div>
             <div className='layertype'>{name}</div>
-            <TextInput wrapperClass={'layername'} className={'layername_field'} value={layer.name} onChange={onChange(dispatch, `${path}.name`)} placeholder={"layer name"} />
+            <TextInput wrapperClass={'layername'} className={'layername_field'} value={layer.name} onChange={onChange(dispatch, [...path, 'name'])} placeholder={"layer name"} />
             <div className='layercmd'>
                 { withVisibility ?
-                    <button title="Copy" className='symbol' onClick={(e) => { dispatch({ action: "edit", path: `${path}.visible`, value: !layer.visible })}} >{layer.visible ? <Icon.PUBLIC /> : <Icon.PRIVATE />}</button>
+                    <button title="Copy" className='symbol' onClick={(e) => { dispatch({ action: "edit", path: [...path, 'visible'], value: !layer.visible })}} >{layer.visible ? <Icon.PUBLIC /> : <Icon.PRIVATE />}</button>
                 : null}
                 <button title="Copy" className='symbol' onClick={() => {
                     setClipboard(cloneDeep(layer));
@@ -52,7 +65,8 @@ export const Wrapper = ({ name, layer, path, children, withVisibility }) => {
 }
 
 const output = {
-    Wrapper,
+    EffectWrapper,
+    LayerWrapper,
     onChange,
     onValue
 }

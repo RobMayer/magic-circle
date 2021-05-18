@@ -5,6 +5,51 @@ const COLOR_REGEX = /^#([A-Fa-f0-9]{3}|[A-Fa-f0-9]{4}|[A-Fa-f0-9]{6}|[A-Fa-f0-9]
 
 const CURVES = Object.keys(interpolation.curves);
 
+export const EFFECTS = {
+    sketch: {
+        term: "Sketch",
+        validate: (data, path) => {
+            return {
+                type: "sketch",
+                seed: checkValue(data, [...path, 'seed'], Math.round(Math.random() * 1000), isInteger),
+                shake: checkValue(data, [...path, 'shake'], 0.2, isGTE(0), isLTE(1)),
+                nib: checkLength(data, [...path, 'nib'], 1, 1),
+            }
+        }
+    },
+    pen: {
+        term: "Pen",
+        validate: (data, path) => {
+            return {
+                type: "pen",
+                nib: checkLength(data, [...path, 'nib'], 1, 1),
+                seed: checkValue(data, [...path, 'seed'], Math.round(Math.random() * 1000), isInteger),
+                smudge: checkValue(data, [...path, 'smudge'], 0.2, isGTE(0), isLTE(1)),
+                spatter: checkValue(data, [...path, 'spatter'], 0, isGTE(0), isLTE(1))
+            }
+        }
+    },
+    pencil: {
+        term: "Pencil",
+        validate: (data, path) => {
+            return {
+                type: "pencil",
+                seed: checkValue(data, [...path, 'seed'], Math.round(Math.random() * 1000), isInteger)
+            }
+        }
+    },
+    glow: {
+        term: "Glow",
+        validate: (data, path) => {
+            return {
+                type: "glow",
+                blur: checkValue(data, [...path, 'blur'], 3, isNumber),
+                spread: checkLength(data, [...path, 'spread'], 3, 1),
+            }
+        }
+    }
+}
+
 export const LAYERS = {
     line:  {
         term: "Line",
@@ -340,6 +385,42 @@ export const LAYERS = {
             }
         }
     },
+    effect: {
+        term: "Effect",
+        category: "utility",
+        validate: (data, path) => {
+            return {
+                type: "effect",
+                name: checkValue(data, [...path, "name"], "", isString),
+                isOpen: checkValue(data, [...path, "isOpen"], true, isBoolean),
+                visible: checkValue(data, [...path, "visible"], true, isBoolean),
+                posMode: checkValue(data, [...path, "posMode"], "polar", isEnum("cartesian", "polar")),
+                r: checkLength(data, [...path, 'r'], 0, 96),
+                t: checkValue(data, [...path, 't'], 0, isNumber),
+                x: checkLength(data, [...path, 'x'], 0, 96),
+                y: checkLength(data, [...path, 'y'], 0, 96),
+                rotation: checkValue(data, [...path, 'rotation'], 0, isNumber),
+                showEffect: checkValue(data, [...path, 'showEffect'], true, isBoolean),
+                definition: checkEffect(data, [...path, 'definition']),
+                layers: checkLayers(data, [...path, 'layers'])
+            }
+        }
+    },
+    recolor: {
+        term: "Recolor",
+        category: "utility",
+        validate: (data, path) => {
+            return {
+                type: "recolor",
+                name: checkValue(data, [...path, "name"], "", isString),
+                isOpen: checkValue(data, [...path, "isOpen"], true, isBoolean),
+                visible: checkValue(data, [...path, "visible"], true, isBoolean),
+                foreground: checkValue(data, [...path, 'foreground'], "#800", isColor),
+                background: checkValue(data, [...path, 'background'], "#fff", isColor),
+                layers: checkLayers(data, [...path, 'layers'])
+            }
+        }
+    },
     note: {
         term: "Note",
         category: "utility",
@@ -440,6 +521,12 @@ const checkLayers = (data, path) => {
     }).filter(a => a !== undefined)
 }
 
+const checkEffect = (data, path) => {
+    const t = checkValue(data, [...path, 'type'], null, isEnum(...Object.keys(EFFECTS)));
+    if (t === null) { return null; }
+    return EFFECTS[t].validate(data, path);
+}
+
 export const validateUpload = (data) => {
     const path = [];
     const result = {};
@@ -460,6 +547,7 @@ export const validateUpload = (data) => {
 
 const output = {
     validateUpload,
-    LAYERS
+    LAYERS,
+    EFFECTS
 };
 export default output;

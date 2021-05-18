@@ -1,6 +1,6 @@
 import { useContext } from 'react';
-import { DispatchContext, ColorContext } from '../contexts';
-import { Wrapper, onChange, onValue } from '../ui/common';
+import { DispatchContext } from '../contexts';
+import { LayerWrapper, onChange, onValue } from '../ui/common';
 import Prefabs from '../ui/prefabs';
 import Checkbox from '../ui/checkbox';
 import Tabs from '../ui/tabs';
@@ -10,8 +10,7 @@ import Field from '../ui/field';
 import Dropdown from '../ui/dropdown';
 import Interpolation from '../util/interpolation';
 
-export const Drawing = ({ path, posMode, x, y, r, t, fill, stroke, rotation, radialMode, inner, outer, radius, spread, thetaMode, count, step, coverage, toExtent, thetaCurve, scale, visible, renderAsMask }) => {
-    const colors = useContext(ColorContext);
+export const Drawing = ({ path, posMode, x, y, r, t, fill, stroke, rotation, radialMode, inner, outer, radius, spread, thetaMode, count, step, coverage, toExtent, thetaCurve, scale, visible, renderAsMask, colors }) => {
     // thetaMode determines how objects are thrown around the circumference
     // radialMode determines the inner and outer radius of
     const cx = posMode === 'cartesian' ? x.value * x.unit : (r.value * r.unit) * Math.cos((-t + 90) * Math.PI / 180);
@@ -51,38 +50,38 @@ Drawing.defaultProps ={
 
 export const Interface = ({ layer, path, fromMask }) => {
     const dispatch = useContext(DispatchContext);
-    return <Wrapper layer={layer} path={path} name='Burst' withVisibility>
+    return <LayerWrapper layer={layer} path={path} name='Burst' withVisibility>
         <Field label={"Count"}>
-            <NumberInput value={layer.count} onChange={onChange(dispatch, `${path}.count`)} min={0} />
+            <NumberInput value={layer.count} onChange={onChange(dispatch, [...path, 'count'])} min={0} />
         </Field>
-        <Tabs value={layer.radialMode} onChange={onValue(dispatch, `${path}.radialMode`)}>
+        <Tabs value={layer.radialMode} onChange={onValue(dispatch, [...path, 'radialMode'])}>
             <Tabs.Option value={"radiusspread"} label={"Radius / Spread"}>
-                <Prefabs.Length label={"Radius"} value={layer.radius} dispatch={dispatch} path={`${path}.radius`} withScale min={0} />
-                <Prefabs.Length label={"Spread"} value={layer.spread} dispatch={dispatch} path={`${path}.spread`} withScale />
+                <Prefabs.Length label={"Radius"} value={layer.radius} dispatch={dispatch} path={[...path, 'radius']} withScale min={0} />
+                <Prefabs.Length label={"Spread"} value={layer.spread} dispatch={dispatch} path={[...path, 'spread']} withScale />
             </Tabs.Option>
             <Tabs.Option value={"innerouter"} label={"Inner / Outer"}>
-                <Prefabs.Length label={"Radius (Inner)"} value={layer.inner} dispatch={dispatch} path={`${path}.inner`} withScale min={0} />
-                <Prefabs.Length label={"Radius (Outer)"} value={layer.outer} dispatch={dispatch} path={`${path}.outer`} withScale min={0} />
+                <Prefabs.Length label={"Radius (Inner)"} value={layer.inner} dispatch={dispatch} path={[...path, 'inner']} withScale min={0} />
+                <Prefabs.Length label={"Radius (Outer)"} value={layer.outer} dispatch={dispatch} path={[...path, 'outer']} withScale min={0} />
             </Tabs.Option>
         </Tabs>
-        <Tabs value={layer.thetaMode} onChange={onValue(dispatch, `${path}.thetaMode`)}>
+        <Tabs value={layer.thetaMode} onChange={onValue(dispatch, [...path, 'thetaMode'])}>
             <Tabs.Option value={"incremental"} label={"Incremental Steps"}>
                 <Field label={"θ Increment"} tooltip={"Incremental Angle"}>
-                    <NumberInput value={layer.step} onChange={onChange(dispatch, `${path}.step`)} />
+                    <NumberInput value={layer.step} onChange={onChange(dispatch, [...path, 'step'])} />
                 </Field>
             </Tabs.Option>
             <Tabs.Option value={"startstop"} label={"Divided Coverage"}>
                 <Field label={"Start θ"} tooltip={"Start Angle"}>
-                    <NumberInput value={layer.coverage.start} onChange={onChange(dispatch, `${path}.coverage.start`)} />
+                    <NumberInput value={layer.coverage.start} onChange={onChange(dispatch, [...path, 'coverage', 'start'])} />
                 </Field>
                 <Field label={"End θ"} tooltip={"End Angle"}>
-                    <NumberInput value={layer.coverage.end} onChange={onChange(dispatch, `${path}.coverage.end`)} />
+                    <NumberInput value={layer.coverage.end} onChange={onChange(dispatch, [...path, 'coverage', 'end'])} />
                 </Field>
-                <Field label={"To Extent"} tooltip={"Does not render last node"}>
-                    <Checkbox value={layer.toExtent} onChange={onValue(dispatch, `${path}.toExtent`)} />
+                <Field label={"To Extent"} tooltip={"Does not render last node"} inlineLabel>
+                    <Checkbox value={layer.toExtent} onChange={onValue(dispatch, [...path, 'toExtent'])} />
                 </Field>
                 <Field label={"Distribution"}>
-                    <Dropdown value={layer.thetaCurve} onChange={onChange(dispatch, `${path}.thetaCurve`)}>
+                    <Dropdown value={layer.thetaCurve} onChange={onChange(dispatch, [...path, 'thetaCurve'])}>
                         {Object.keys(Interpolation.curves).map((curve) => {
                             return <option key={curve} value={curve}>{curve}</option>
                         })}
@@ -92,7 +91,7 @@ export const Interface = ({ layer, path, fromMask }) => {
         </Tabs>
         <Prefabs.Transforms layer={layer} path={path} dispatch={dispatch} withRotation />
         <Prefabs.Appearance layer={layer} path={path} dispatch={dispatch} withStroke fromMask={fromMask} />
-    </Wrapper>
+    </LayerWrapper>
 }
 
 const output = {

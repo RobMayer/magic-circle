@@ -46,11 +46,10 @@ const NewLayer = ({ path }) => {
     </div>
 }
 
-export const Drawing = ({ path, layers, renderAsMask }) => {
+export const Drawing = ({ path, layers, renderAsMask, colors }) => {
     return <>
         {layers.map(({ type, ...layer }, i) => {
-            const p = `${path}[${i}]`;
-            return <Shapes.Drawing type={type} {...layer} path={p} key={i} renderAsMask={renderAsMask} />
+            return <Shapes.Drawing type={type} {...layer} path={[...path, i]} key={i} renderAsMask={renderAsMask} colors={colors} />
         })}
     </>
 }
@@ -59,8 +58,7 @@ export const Interface = ({ layers, path, fromMask }) => {
     return <div className='layerlist'>
         <NewLayer path={path} />
         {layers.map(({ type, ...layer }, i) => {
-            const p = `${path}[${i}]`;
-            return <Shapes.Interface type={type} {...layer} path={p} key={i} fromMask={fromMask} />
+            return <Shapes.Interface type={type} {...layer} path={[...path, i]} key={i} fromMask={fromMask} />
         }).reverse()}
     </div>
 }

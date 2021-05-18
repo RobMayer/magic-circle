@@ -12,6 +12,8 @@ import Note from './note';
 import Group from './group';
 import Star from './star';
 import Path from './path';
+import Effect from './effect';
+import Recolor from './recolor';
 
 export const Drawing = ({ path, ...layer }) => {
     switch (layer.type) {
@@ -27,7 +29,9 @@ export const Drawing = ({ path, ...layer }) => {
         case "vertexary": return <VertexAry.Drawing path={path} {...layer} />;
         case "radialary": return <RadialAry.Drawing {...layer} path={path} />;
         case "mask": return <Mask.Drawing {...layer} path={path} />;
+        case "effect": return <Effect.Drawing {...layer} path={path} />;
         case "group": return <Group.Drawing {...layer} path={path} />;
+        case "recolor": return <Recolor.Drawing {...layer} path={path} />;
         default: return null;
     }
 }
@@ -47,7 +51,9 @@ export const Interface = ({ path, fromMask, ...layer }) => {
         case "radialary": return <RadialAry.Interface layer={layer} path={path} fromMask={fromMask} />
         case "mask": return <Mask.Interface layer={layer} path={path} fromMask={fromMask} />
         case "group": return <Group.Interface layer={layer} path={path} fromMask={fromMask} />
+        case "effect": return <Effect.Interface layer={layer} path={path} />
         case "note": return <Note.Interface layer={layer} path={path} />
+        case "recolor": return <Recolor.Interface layer={layer} path={path} />
         default: return null;
     }
 }

@@ -1,7 +1,7 @@
 import Shape from './';
 import { useContext } from 'react';
 import { DispatchContext } from '../contexts';
-import { Wrapper, onChange } from '../ui/common';
+import { LayerWrapper, onChange } from '../ui/common';
 import Prefabs from '../ui/prefabs';
 import { range } from 'lodash';
 import NumberInput from '../ui/numberinput';
@@ -18,7 +18,7 @@ const getRadius = (radius, scribe, sides) => {
     }
 }
 
-export const Drawing = ({ path, posMode, x, y, r, t, rotation, radius, scribeMode, thetaMode, count, layers, scaleCurve, thetaCurve, scaleFactor, scale, visible, renderAsMask }) => {
+export const Drawing = ({ path, posMode, x, y, r, t, rotation, radius, scribeMode, thetaMode, count, layers, scaleCurve, thetaCurve, scaleFactor, scale, visible, renderAsMask, colors }) => {
     if (!visible) { return null }
     if (count <= 0 || layers.length <= 0) {
         return null;
@@ -32,7 +32,7 @@ export const Drawing = ({ path, posMode, x, y, r, t, rotation, radius, scribeMod
         const coeff = Interpolation.lerp(Interpolation.delerp(n, 0, count), 0, 360, thetaCurve) - 180;
         const s = Interpolation.lerp(Interpolation.delerp(n, 0, count), 1 * scaleFactor.start, 1 * scaleFactor.end, scaleCurve);
         const nested = layers.map((layer, i) => {
-            return <Shape.Drawing key={i} {...layer} path={[...path, 'layers', i]} scale={s} renderAsMask={renderAsMask} />
+            return <Shape.Drawing key={i} {...layer} path={[...path, 'layers', i]} scale={s} renderAsMask={renderAsMask} colors={colors} />
         });
         return <g key={n} style={{ transform: `rotate(${coeff}deg) translate(0px, ${rad}px)`}}>{nested}</g>
     })
@@ -45,30 +45,30 @@ Drawing.defaultProps ={
 
 export const Interface = ({ layer, path, fromMask }) => {
     const dispatch = useContext(DispatchContext);
-    return <Wrapper layer={layer} path={path} name='Vertex Array' withVisibility>
+    return <LayerWrapper layer={layer} path={path} name='Vertex Array' withVisibility>
         <Field label={"Count"}>
-            <NumberInput value={layer.count} onChange={onChange(dispatch, `${path}.count`)} min={0} />
+            <NumberInput value={layer.count} onChange={onChange(dispatch, [...path, 'count'])} min={0} />
         </Field>
-        <Prefabs.Length label={"Radius"} value={layer.radius} dispatch={dispatch} path={`${path}.radius`} min={0} withScale />
+        <Prefabs.Length label={"Radius"} value={layer.radius} dispatch={dispatch} path={[...path, 'radius']} min={0} withScale />
         <Field label={"Scribe Mode"}>
-            <Dropdown value={layer.scribeMode} onChange={onChange(dispatch, `${path}.scribeMode`)}>
+            <Dropdown value={layer.scribeMode} onChange={onChange(dispatch, [...path, 'scribeMode'])}>
                 <option value={'circumscribe'}>Circumscribe</option>
                 <option value={'inscribe'}>Inscribe</option>
                 <option value={'middle'}>Middle</option>
             </Dropdown>
         </Field>
         <Field label={"Distribution"}>
-            <Dropdown value={layer.thetaCurve} onChange={onChange(dispatch, `${path}.thetaCurve`)}>
+            <Dropdown value={layer.thetaCurve} onChange={onChange(dispatch, [...path, 'thetaCurve'])}>
                 {Object.keys(Interpolation.curves).map((curve) => {
                     return <option key={curve} value={curve}>{curve}</option>
                 })}
             </Dropdown>
         </Field>
         <Field.Group label={"Scale Factors"}>
-            <Field label={"Start"}><NumberInput value={layer.scaleFactor.start} onChange={onChange(dispatch, `${path}.scaleFactor.start`)} step={0.001} min={0} /></Field>
-            <Field label={"End"}><NumberInput value={layer.scaleFactor.end} onChange={onChange(dispatch, `${path}.scaleFactor.end`)} step={0.001} min={0} /></Field>
+            <Field label={"Start"}><NumberInput value={layer.scaleFactor.start} onChange={onChange(dispatch, [...path, 'scaleFactor', 'start'])} step={0.001} min={0} /></Field>
+            <Field label={"End"}><NumberInput value={layer.scaleFactor.end} onChange={onChange(dispatch, [...path, 'scaleFactor', 'end'])} step={0.001} min={0} /></Field>
             <Field label={"Distribution"}>
-                <Dropdown value={layer.scaleCurve} onChange={onChange(dispatch, `${path}.scaleCurve`)}>
+                <Dropdown value={layer.scaleCurve} onChange={onChange(dispatch, [...path, 'scaleCurve'])}>
                     {Object.keys(Interpolation.curves).map((curve) => {
                         return <option key={curve} value={curve}>{curve}</option>
                     })}
@@ -77,8 +77,8 @@ export const Interface = ({ layer, path, fromMask }) => {
         </Field.Group>
         <Prefabs.Transforms layer={layer} path={path} dispatch={dispatch} withRotation />
         <Field.Heading>Sub Layers</Field.Heading>
-        <LayerList.Interface path={`${path}.layers`} layers={layer.layers} fromMask={fromMask} />
-    </Wrapper>
+        <LayerList.Interface path={[...path, 'layers']} layers={layer.layers} fromMask={fromMask} />
+    </LayerWrapper>
 }
 
 const output = {

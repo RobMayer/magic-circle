@@ -1,10 +1,9 @@
 import { useContext } from 'react';
-import { DispatchContext, ColorContext } from '../contexts';
-import { Wrapper } from '../ui/common';
+import { DispatchContext } from '../contexts';
+import { LayerWrapper } from '../ui/common';
 import Prefabs from '../ui/prefabs';
 
-export const Drawing = ({ path, posMode, x, y, r, t, radius, fill, stroke, scale, visible, renderAsMask }) => {
-    const colors = useContext(ColorContext);
+export const Drawing = ({ path, posMode, x, y, r, t, radius, fill, stroke, scale, visible, renderAsMask, colors }) => {
     if (!visible) { return null }
     const cx = posMode === 'cartesian' ? x.value * x.unit : (r.value * r.unit) * Math.cos((-t + 90) * Math.PI / 180);
     const cy = posMode === 'cartesian' ? y.value * y.unit : (r.value * r.unit) * Math.sin((-t + 90) * Math.PI / 180);
@@ -31,11 +30,11 @@ Drawing.defaultProps = {
 
 export const Interface = ({ layer, path, fromMask }) => {
     const dispatch = useContext(DispatchContext);
-    return <Wrapper layer={layer} path={path} name='Circle' withVisibility>
-        <Prefabs.Length label={"Radius"} value={layer.radius} dispatch={dispatch} path={`${path}.radius`} min={0} withScale />
+    return <LayerWrapper layer={layer} path={path} name='Circle' withVisibility>
+        <Prefabs.Length label={"Radius"} value={layer.radius} dispatch={dispatch} path={[...path, 'radius']} min={0} withScale />
         <Prefabs.Transforms layer={layer} path={path} dispatch={dispatch} />
         <Prefabs.Appearance layer={layer} path={path} dispatch={dispatch} withFill withStroke fromMask={fromMask} />
-    </Wrapper>
+    </LayerWrapper>
 }
 
 const output = {

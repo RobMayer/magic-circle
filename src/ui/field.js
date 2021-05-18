@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import Icon from './icon';
 
-const Field = ({ label, className, children, tooltip, columns }) => {
-    return <div className={`field ${className ?? ""} ${label ? 'with-label' : '' }`} title={tooltip}>
+const Field = ({ label, className, children, tooltip, columns, inlineLabel }) => {
+    return <div className={`field ${className ?? ""} ${label ? inlineLabel ? 'with-inline-label' : 'with-label' : '' }`} title={tooltip}>
         { label ? <div className='field_label'>{label}</div> : null }
         <div className='field_content' style={{ gridAutoColumns: columns ?? "1fr" }}>{children}</div>
     </div>

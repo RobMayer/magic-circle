@@ -1,6 +1,6 @@
 import { useContext } from 'react';
-import { DispatchContext, ColorContext } from '../contexts';
-import { Wrapper, onValue, onChange } from '../ui/common';
+import { DispatchContext } from '../contexts';
+import { LayerWrapper, onValue, onChange } from '../ui/common';
 import Prefabs from '../ui/prefabs';
 import Tabs from '../ui/tabs';
 import SliderInput from '../ui/sliderinput';
@@ -22,8 +22,7 @@ const getRadius = (radius, scribe, sides) => {
     }
 }
 
-export const Drawing = ({ path, posMode, x, y, r, t, rotation, radialMode, inner, points, outer, radius, spread, scribeMode, thetaCurve, fill, stroke, scale, visible, renderAsMask }) => {
-    const colors = useContext(ColorContext);
+export const Drawing = ({ path, posMode, x, y, r, t, rotation, radialMode, inner, points, outer, radius, spread, scribeMode, thetaCurve, fill, stroke, scale, visible, renderAsMask, colors }) => {
     if (!visible) { return null }
     const cx = posMode === 'cartesian' ? x.value * x.unit : (r.value * r.unit) * Math.cos((-t + 90) * Math.PI / 180);
     const cy = posMode === 'cartesian' ? y.value * y.unit : (r.value * r.unit) * Math.sin((-t + 90) * Math.PI / 180);
@@ -57,30 +56,30 @@ Drawing.defaultProps ={
 
 export const Interface = ({ layer, path, fromMask }) => {
     const dispatch = useContext(DispatchContext);
-    return <Wrapper layer={layer} path={path} name='Star' withVisibility>
-        <Tabs value={layer.radialMode} onChange={onValue(dispatch, `${path}.radialMode`)}>
+    return <LayerWrapper layer={layer} path={path} name='Star' withVisibility>
+        <Tabs value={layer.radialMode} onChange={onValue(dispatch, [...path, 'radialMode'])}>
             <Tabs.Option value={"innerouter"} label={"Inner / Outer"}>
-                <Prefabs.Length label={"Radius (Inner)"} value={layer.inner} dispatch={dispatch} path={`${path}.inner`} min={0} withScale />
-                <Prefabs.Length label={"Radius (Outer)"} value={layer.outer} dispatch={dispatch} path={`${path}.outer`} min={0} withScale />
+                <Prefabs.Length label={"Radius (Inner)"} value={layer.inner} dispatch={dispatch} path={[...path, 'inner']} min={0} withScale />
+                <Prefabs.Length label={"Radius (Outer)"} value={layer.outer} dispatch={dispatch} path={[...path, 'outer']} min={0} withScale />
             </Tabs.Option>
             <Tabs.Option value={"radiusspread"} label={"Radius / Spread"}>
-                <Prefabs.Length label={"Radius"} value={layer.radius} dispatch={dispatch} path={`${path}.radius`} min={0} withScale />
-                <Prefabs.Length label={"Spread"} value={layer.spread} dispatch={dispatch} path={`${path}.spread`} min={0} withScale />
+                <Prefabs.Length label={"Radius"} value={layer.radius} dispatch={dispatch} path={[...path, 'radius']} min={0} withScale />
+                <Prefabs.Length label={"Spread"} value={layer.spread} dispatch={dispatch} path={[...path, 'spread']} min={0} withScale />
             </Tabs.Option>
         </Tabs>
         <Field label={"Scribe Mode"}>
-            <Dropdown value={layer.scribeMode} onChange={onChange(dispatch, `${path}.scribeMode`)}>
+            <Dropdown value={layer.scribeMode} onChange={onChange(dispatch, [...path, 'scribeMode'])}>
                 <option value={'circumscribe'}>Circumscribe</option>
                 <option value={'inscribe'}>Inscribe</option>
                 <option value={'middle'}>Middle</option>
             </Dropdown>
         </Field>
         <Field label={"Points"} columns={"2fr 1fr"}>
-            <SliderInput value={layer.points} onChange={onChange(dispatch, `${path}.points`)} min={3} max={24} step={1} />
-            <NumberInput value={layer.points} onChange={onChange(dispatch, `${path}.points`)} min={3} max={24} step={1} />
+            <SliderInput value={layer.points} onChange={onChange(dispatch, [...path, 'points'])} min={3} max={24} step={1} />
+            <NumberInput value={layer.points} onChange={onChange(dispatch, [...path, 'points'])} min={3} max={24} step={1} />
         </Field>
         <Field label={"Distribution"}>
-            <Dropdown value={layer.thetaCurve} onChange={onChange(dispatch, `${path}.thetaCurve`)}>
+            <Dropdown value={layer.thetaCurve} onChange={onChange(dispatch, [...path, 'thetaCurve'])}>
                 {Object.keys(Interpolation.curves).map((curve) => {
                     return <option key={curve} value={curve}>{curve}</option>
                 })}
@@ -88,7 +87,7 @@ export const Interface = ({ layer, path, fromMask }) => {
         </Field>
         <Prefabs.Transforms layer={layer} path={path} dispatch={dispatch} withRotation />
         <Prefabs.Appearance layer={layer} path={path} dispatch={dispatch} withFill withStroke fromMask={fromMask} />
-    </Wrapper>
+    </LayerWrapper>
 }
 
 const output = {
