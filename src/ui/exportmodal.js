@@ -1,4 +1,4 @@
-import { useState, useReducer } from 'react';
+import { useState, useReducer, useEffect } from 'react';
 import { set } from 'lodash/fp';
 import optimize from 'svgo-browser/lib/optimize';
 import Modal from './modal';
@@ -20,6 +20,9 @@ export const ExportModal = ({ isOpen, close, canvas, name }) => {
     const cw = canvas.w.value * canvas.w.unit;
     const ch = canvas.h.value * canvas.h.unit;
     const [filename, setFilename] = useState(name);
+    useEffect(() => {
+        setFilename(name)
+    }, [name])
     const [ dimensions, dispatch ] = useReducer(reducer, START_DIMENSIONS);
 
     const [ processing, setProcessing ] = useState(false);
