@@ -6,14 +6,14 @@ import Field from '../ui/field';
 import BlockInput from '../ui/blockinput';
 import Warning from '../ui/warning';
 
-export const Drawing = ({ path, posMode, x, y, r, t, s, rotation, definition, fill, stroke, scale, visible, renderAsMask, colors }) => {
+export const Drawing = ({ path, posMode, x, y, r, t, s, rotation, definition, fill, stroke, tweenScale, tweenColors, visible, renderAsMask, colors }) => {
     if (!visible) { return null }
     const cx = posMode === 'cartesian' ? x.value * x.unit : (r.value * r.unit) * Math.cos((-t + 90) * Math.PI / 180);
     const cy = posMode === 'cartesian' ? y.value * y.unit : (r.value * r.unit) * Math.sin((-t + 90) * Math.PI / 180);
     const styles = {
-        fill: fill.option === "none" ? "none" : colors[fill.option] ?? fill.color,
-        stroke: stroke.option === "none" ? "none" : colors[stroke.option] ?? stroke.color,
-        strokeWidth: (stroke.value * stroke.unit * (1 / s) * (stroke.useScale ? scale : 1)),
+        fill: fill.option === "tween" ? (tweenColors?.fill ?? "none") : fill.option === "none" ? "none" : colors[fill.option] ?? fill.color,
+        stroke: stroke.option === "tween" ? (tweenColors?.stroke ?? colors['foreground']) : stroke.option === "none" ? "none" : colors[stroke.option] ?? stroke.color,
+        strokeWidth: (stroke.value * stroke.unit * (stroke.useScale ? (tweenScale ?? 1) : 1)),
         transform: `translate(${cx}px,${-cy}px) rotate(${rotation}deg) scale(${s})`
     }
     if (renderAsMask === "inverted") {
@@ -24,10 +24,6 @@ export const Drawing = ({ path, posMode, x, y, r, t, s, rotation, definition, fi
         styles.stroke = stroke.option === "foreground" ? "#fff" : stroke.option === "background" ? "#000" : "none";
     }
     return <path d={definition} style={styles} />
-}
-
-Drawing.defaultProps ={
-    scale: 1
 }
 
 export const Interface = ({ layer, path, fromMask }) => {

@@ -28,8 +28,8 @@ const SubHeading = ({ children }) => {
 }
 
 const Row = ({ children, label, className, tooltip }) => {
-    return <div className={`row ${className ?? ""} ${label ? 'with-label' : '' }`} title={tooltip}>
-        { label ? <div className='row_label'>{label}</div> : null }
+    return <div className={`row ${className ?? ""}`} title={tooltip}>
+        <div className='row_label'>{label}</div>
         {children}
     </div>
 }

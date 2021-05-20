@@ -20,28 +20,20 @@ const NewEffect = ({ path }) => {
     </div>
 }
 
-export const Drawing = ({ path, posMode, x, y, r, t, rotation, definition, showEffect, layers, scale, visible, renderAsMask, colors }) => {
+export const Drawing = ({ path, posMode, x, y, r, t, rotation, definition, showEffect, layers, tweenScale, tweenColors, visible, renderAsMask, colors }) => {
     if (!visible) { return null }
     const cx = posMode === 'cartesian' ? x.value * x.unit : (r.value * r.unit) * Math.cos((-t + 90) * Math.PI / 180);
     const cy = posMode === 'cartesian' ? y.value * y.unit : (r.value * r.unit) * Math.sin((-t + 90) * Math.PI / 180);
     if ((definition ?? null) !== null && showEffect === true) {
-        // return <Effect.Drawing key={i} path={[...path, 'filters', i]} {...filter} />
         const layerChildren = layers.map((layer, i) => {
-            return <Shape.Drawing key={i} path={[...path, 'layers', i]} scale={scale} {...layer} renderAsMask={renderAsMask} colors={colors} />
+            return <Shape.Drawing key={i} path={[...path, 'layers', i]} tweenScale={tweenScale} tweenColors={tweenColors} {...layer} renderAsMask={renderAsMask} colors={colors} />
         });
-
-        /*
-            <g style={{ transform: `translate(${cx}px, ${-cy}px) rotate(${rotation}deg)` }}>
-                <filter id={effectId}>{theFilter}</filter>
-                <g filter={effectId}>{layerChildren}</g>
-            </g>
-        */
         return <g style={{ transform: `translate(${cx}px, ${-cy}px) rotate(${rotation}deg)` }}>
             <Effect.Drawing path={path} {...definition}>{layerChildren}</Effect.Drawing>
         </g>
     } else {
         const layerChildren = layers.map((layer, i) => {
-            return <Shape.Drawing key={i} path={[...path, 'layers', i]} scale={scale} {...layer} renderAsMask={renderAsMask} colors={colors} />
+            return <Shape.Drawing key={i} path={[...path, 'layers', i]} tweenScale={tweenScale} tweenColors={tweenColors} {...layer} renderAsMask={renderAsMask} colors={colors} />
         });
         return <g style={{ transform: `translate(${cx}px, ${-cy}px) rotate(${rotation}deg)` }}>
             <g>{layerChildren}</g>

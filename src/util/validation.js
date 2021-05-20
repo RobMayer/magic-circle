@@ -4,6 +4,7 @@ import interpolation from './interpolation';
 const COLOR_REGEX = /^#([A-Fa-f0-9]{3}|[A-Fa-f0-9]{4}|[A-Fa-f0-9]{6}|[A-Fa-f0-9]{8})$/;
 
 const CURVES = Object.keys(interpolation.curves);
+const COLORSPACES = Object.keys(interpolation.COLORSPACE_NAMES);
 
 export const EFFECTS = {
     sketch: {
@@ -331,6 +332,18 @@ export const LAYERS = {
                 radialCurve: checkValue(data, [...path, 'radialCurve'], "linear", isEnum(...CURVES)),
                 scaleCurve: checkValue(data, [...path, 'scaleCurve'], "linear", isEnum(...CURVES)),
                 thetaCurve: checkValue(data, [...path, 'thetaCurve'], "linear", isEnum(...CURVES)),
+                colorCurveStroke: checkValue(data, [...path, 'colorCurveStroke'], "linear", isEnum(...CURVES)),
+                colorSpaceStroke: checkValue(data, [...path, 'colorSpaceStroke'], "rgb", isEnum(...COLORSPACES)),
+                colorFactorStroke: {
+                    start: checkValue(data, [...path, 'colorFactorStroke', 'start'], null, isNull, isColor),
+                    end: checkValue(data, [...path, 'colorFactorStroke', 'end'], null, isNull, isColor)
+                },
+                colorCurveFill: checkValue(data, [...path, 'colorCurveFill'], "linear", isEnum(...CURVES)),
+                colorSpaceFill: checkValue(data, [...path, 'colorSpaceFill'], "rgb", isEnum(...COLORSPACES)),
+                colorFactorFill: {
+                    start: checkValue(data, [...path, 'colorFactorFill', 'start'], null, isNull, isColor),
+                    end: checkValue(data, [...path, 'colorFactorFill', 'end'], null, isNull, isColor)
+                },
                 layers: checkLayers(data, [...path, 'layers'])
             }
         }
@@ -359,6 +372,18 @@ export const LAYERS = {
                 },
                 scaleCurve: checkValue(data, [...path, 'scaleCurve'], "linear", isEnum(...CURVES)),
                 thetaCurve: checkValue(data, [...path, 'thetaCurve'], "linear", isEnum(...CURVES)),
+                colorCurveStroke: checkValue(data, [...path, 'colorCurveStroke'], "linear", isEnum(...CURVES)),
+                colorSpaceStroke: checkValue(data, [...path, 'colorSpaceStroke'], "rgb", isEnum(...COLORSPACES)),
+                colorFactorStroke: {
+                    start: checkValue(data, [...path, 'colorFactorStroke', 'start'], null, isNull, isColor),
+                    end: checkValue(data, [...path, 'colorFactorStroke', 'end'], null, isNull, isColor)
+                },
+                colorCurveFill: checkValue(data, [...path, 'colorCurveFill'], "linear", isEnum(...CURVES)),
+                colorSpaceFill: checkValue(data, [...path, 'colorSpaceFill'], "rgb", isEnum(...COLORSPACES)),
+                colorFactorFill: {
+                    start: checkValue(data, [...path, 'colorFactorFill', 'start'], null, isNull, isColor),
+                    end: checkValue(data, [...path, 'colorFactorFill', 'end'], null, isNull, isColor)
+                },
                 layers: checkLayers(data, [...path, 'layers'])
             }
         }
@@ -437,7 +462,7 @@ export const LAYERS = {
 
 export const isString = a => typeof a === "string" ? a : undefined;
 export const isLiteral = (c) => { return a => a === c ? a : undefined; };
-export const isNull = a => a === null ? a : undefined;
+export const isNull = (a) => { return a === null ? a : typeof a === 'string' && a === '' ? null : undefined }
 export const isColor = a => typeof a === "string" && COLOR_REGEX.test(a) ? a : undefined;
 export const isNumber = a => !isNaN(Number(a)) ? Number(a) : undefined;
 export const isEnum = (...values) => { return a => values.includes(a) ? a : undefined; }
@@ -475,7 +500,7 @@ const checkValue = (data, path, fallback, ...funcs) => {
 
 const checkStroke = (data, path) => {
     return {
-        option: checkValue(data, [...path, 'option'], 'foreground', isEnum("foreground", "background", "none", "custom")),
+        option: checkValue(data, [...path, 'option'], 'foreground', isEnum("foreground", "background", "none", "custom", "tween")),
         color: checkValue(data, [...path, 'color'], '#000', isColor),
         value: checkValue(data, [...path, 'value'], 1, isGTE(0)),
         unit: checkValue(data, [...path, 'unit'], 1, isEnum(1, 96, 25.4, 2.54)),
@@ -485,7 +510,7 @@ const checkStroke = (data, path) => {
 
 const checkFill = (data, path) => {
     return {
-        option: checkValue(data, [...path, 'option'], 'none', isEnum("foreground", "background", "none", "custom")),
+        option: checkValue(data, [...path, 'option'], 'none', isEnum("foreground", "background", "none", "custom", "tween")),
         color: checkValue(data, [...path, 'color'], '#000', isColor)
     }
 }

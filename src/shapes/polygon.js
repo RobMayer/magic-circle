@@ -21,14 +21,14 @@ const getRadius = (radius, scribe, sides) => {
     }
 }
 
-export const Drawing = ({ path, posMode, x, y, r, t, radius, scribeMode, sides, fill, rotation, stroke, thetaCurve, scale, visible, renderAsMask, colors }) => {
+export const Drawing = ({ path, posMode, x, y, r, t, radius, scribeMode, sides, fill, rotation, stroke, thetaCurve, tweenScale, tweenColors, visible, renderAsMask, colors }) => {
     if (!visible) { return null }
     const cx = posMode === 'cartesian' ? x.value * x.unit : (r.value * r.unit) * Math.cos((-t + 90) * Math.PI / 180);
     const cy = posMode === 'cartesian' ? y.value * y.unit : (r.value * r.unit) * Math.sin((-t + 90) * Math.PI / 180);
     const styles = {
-        fill: fill.option === "none" ? "none" : colors[fill.option] ?? fill.color,
-        stroke: stroke.option === "none" ? "none" : colors[stroke.option] ?? stroke.color,
-        strokeWidth: (stroke.value * stroke.unit * (stroke.useScale ? scale : 1)),
+        fill: fill.option === "tween" ? (tweenColors?.fill ?? "none") : fill.option === "none" ? "none" : colors[fill.option] ?? fill.color,
+        stroke: stroke.option === "tween" ? (tweenColors?.stroke ?? colors['foreground']) : stroke.option === "none" ? "none" : colors[stroke.option] ?? stroke.color,
+        strokeWidth: (stroke.value * stroke.unit * (stroke.useScale ? (tweenScale ?? 1) : 1)),
         transform: `translate(${cx}px, ${-cy}px) rotate(${rotation}deg)`
     }
     if (renderAsMask === "inverted") {
@@ -38,7 +38,7 @@ export const Drawing = ({ path, posMode, x, y, r, t, radius, scribeMode, sides, 
         styles.fill = fill.option === "foreground" ? "#fff" : fill.option === "background" ? "#000" : "none";
         styles.stroke = stroke.option === "foreground" ? "#fff" : stroke.option === "background" ? "#000" : "none";
     }
-    const rad = getRadius(radius.value * radius.unit * (radius.useScale ? scale : 1), scribeMode, sides);
+    const rad = getRadius(radius.value * radius.unit * (radius.useScale ? (tweenScale ?? 1) : 1), scribeMode, sides);
     return <polygon points={range(sides).map((i) => {
         const coeff = Interpolation.lerp(Interpolation.delerp(i, 0, sides), 0, 360, thetaCurve);
         return `${rad * Math.cos(deg2rad(coeff - 90))},${rad * Math.sin(deg2rad(coeff - 90))}`

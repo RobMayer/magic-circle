@@ -443,13 +443,10 @@ input.layername_field {
     display: grid;
     gap: 0px;
     margin: 1px;
+    grid-template-columns: 3.5em;
     grid-auto-columns: 1fr;
     grid-auto-flow: column;
     align-items: center;
-}
-
-.row.with-label {
-    grid-template-columns: 3.5em;
 }
 
 .row_label {

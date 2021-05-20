@@ -56,6 +56,7 @@ export const Appearance = ({ layer, path, dispatch, withStroke, withFill, fromMa
                         <option value='foreground'>{fromMask ? "Reveal" : "Foreground"}</option>
                         <option value='background'>{fromMask ? "Hide" : "Background"}</option>
                         <option value='custom'>Custom</option>
+                        <option value='tween'>Interpolated</option>
                     </Dropdown>
                     <ColorInput value={layer.fill.color} onChange={onChange(dispatch, [...path, 'fill', 'color'])} disabled={layer.fill.option !== "custom"} />
                 </Field>
@@ -67,6 +68,7 @@ export const Appearance = ({ layer, path, dispatch, withStroke, withFill, fromMa
                         <option value='foreground'>{fromMask ? "Reveal" : "Foreground"}</option>
                         <option value='background'>{fromMask ? "Hide" : "Background"}</option>
                         <option value='custom'>Custom</option>
+                        <option value='tween'>Interpolated</option>
                     </Dropdown>
                     <ColorInput value={layer.stroke.color} onChange={onChange(dispatch, [...path, 'stroke', 'color'])} disabled={layer.stroke.option !== "custom"} />
                 </Field>

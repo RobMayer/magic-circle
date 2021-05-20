@@ -1,4 +1,7 @@
 const changelog = [
+    { version: "0.6.0", items: [
+        "Added Color Interpolation for VertexArray and RadialArray"
+    ]},
     { version: "0.5.0", items: [
         "Changed how the 'Pen' filter renders for the sake of higher resolutions - re-saving may be necessary.",
         "Added Export to PNG"

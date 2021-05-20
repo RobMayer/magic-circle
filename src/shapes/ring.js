@@ -4,14 +4,14 @@ import { LayerWrapper, onValue } from '../ui/common';
 import Prefabs from '../ui/prefabs';
 import Tabs from '../ui/tabs';
 
-export const Drawing = ({ path, posMode, x, y, r, t, radialMode, inner, outer, radius, spread, fill, stroke, scale, visible, renderAsMask, colors }) => {
+export const Drawing = ({ path, posMode, x, y, r, t, radialMode, inner, outer, radius, spread, fill, stroke, tweenScale, tweenColors, visible, renderAsMask, colors }) => {
     if (!visible) { return null }
     const cx = posMode === 'cartesian' ? x.value * x.unit : (r.value * r.unit) * Math.cos((-t + 90) * Math.PI / 180);
     const cy = posMode === 'cartesian' ? y.value * y.unit : (r.value * r.unit) * Math.sin((-t + 90) * Math.PI / 180);
     const styles = {
-        fill: fill.option === "none" ? "none" : colors[fill.option] ?? fill.color,
-        stroke: stroke.option === "none" ? "none" : colors[stroke.option] ?? stroke.color,
-        strokeWidth: (stroke.value * stroke.unit * (stroke.useScale ? scale : 1)),
+        fill: fill.option === "tween" ? (tweenColors?.fill ?? "none") : fill.option === "none" ? "none" : colors[fill.option] ?? fill.color,
+        stroke: stroke.option === "tween" ? (tweenColors?.stroke ?? colors['foreground']) : stroke.option === "none" ? "none" : colors[stroke.option] ?? stroke.color,
+        strokeWidth: (stroke.value * stroke.unit * (stroke.useScale ? (tweenScale ?? 1) : 1)),
         transform: `translate(${cx}px,${-cy}px)`
     }
     if (renderAsMask === "inverted") {
@@ -21,8 +21,8 @@ export const Drawing = ({ path, posMode, x, y, r, t, radialMode, inner, outer, r
         styles.fill = fill.option === "foreground" ? "#fff" : fill.option === "background" ? "#000" : "none";
         styles.stroke = stroke.option === "foreground" ? "#fff" : stroke.option === "background" ? "#000" : "none";
     }
-    const rO = radialMode === "innerouter" ? (outer.value * outer.unit * (outer.usesScale ? scale : 1)) : (radius.value * radius.unit * (radius.usesScale ? scale : 1) + (spread.value * spread.unit * (spread.usesScale ? scale : 1)) / 2);
-    const rI = radialMode === "innerouter" ? (inner.value * inner.unit * (inner.usesScale ? scale : 1)) : (radius.value * radius.unit * (radius.usesScale ? scale : 1) - (spread.value * spread.unit * (spread.usesScale ? scale : 1)) / 2);
+    const rO = radialMode === "innerouter" ? (outer.value * outer.unit * (outer.usesScale ? (tweenScale ?? 1) : 1)) : (radius.value * radius.unit * (radius.usesScale ? (tweenScale ?? 1) : 1) + (spread.value * spread.unit * (spread.usesScale ? (tweenScale ?? 1) : 1)) / 2);
+    const rI = radialMode === "innerouter" ? (inner.value * inner.unit * (inner.usesScale ? (tweenScale ?? 1) : 1)) : (radius.value * radius.unit * (radius.usesScale ? (tweenScale ?? 1) : 1) - (spread.value * spread.unit * (spread.usesScale ? (tweenScale ?? 1) : 1)) / 2);
 
     const d = `M ${rO},0 A 1,1 0 0,0 ${-rO},0 A 1,1 0 0,0 ${rO},0 M ${rI},0 A 1,1 0 0,1 ${-rI},0 A 1,1 0 0,1 ${rI},0`;
     return <path d={d} style={styles} />

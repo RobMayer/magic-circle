@@ -6,10 +6,10 @@ import Field from '../ui/field';
 import LayerList from './layerlist';
 import Shape from './';
 
-export const Drawing = ({ path, layers, scale, visible, renderAsMask, colors, foreground, background }) => {
+export const Drawing = ({ path, layers, tweenScale, visible, renderAsMask, colors, foreground, background }) => {
     if (!visible) { return null }
     return layers.map((layer, i) => {
-        return <Shape.Drawing key={i} path={[...path, 'layers', i]} scale={scale} {...layer} renderAsMask={renderAsMask} colors={{ ...colors, foreground, background }} />
+        return <Shape.Drawing key={i} path={[...path, 'layers', i]} tweenScale={tweenScale} {...layer} renderAsMask={renderAsMask} colors={{ ...colors, foreground, background }} />
     });
 }
 

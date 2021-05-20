@@ -21,7 +21,7 @@ const getRadius = (radius, scribe, sides) => {
     }
 }
 
-export const Drawing = ({ path, posMode, x, y, r, t, radius, scribeMode, sides, skip, fill, rotation, stroke, thetaCurve, scale, visible, renderAsMask, colors }) => {
+export const Drawing = ({ path, posMode, x, y, r, t, radius, scribeMode, sides, skip, fill, rotation, stroke, thetaCurve, tweenScale, tweenColors, visible, renderAsMask, colors }) => {
     if (!visible) { return null }
     skip = Number(skip);
     if (isNaN(skip)) {
@@ -29,7 +29,7 @@ export const Drawing = ({ path, posMode, x, y, r, t, radius, scribeMode, sides, 
     }
     const cx = posMode === 'cartesian' ? x.value * x.unit : (r.value * r.unit) * Math.cos((-t + 90) * Math.PI / 180);
     const cy = posMode === 'cartesian' ? y.value * y.unit : (r.value * r.unit) * Math.sin((-t + 90) * Math.PI / 180);
-    const rad = getRadius(radius.value * radius.unit * (radius.useScale ? scale : 1), scribeMode, sides);
+    const rad = getRadius(radius.value * radius.unit * (radius.useScale ? (tweenScale ?? 1) : 1), scribeMode, sides);
     const angles = range(0, sides).map((a) => {
         return Interpolation.lerp(Interpolation.delerp(a, 0, sides), 0, 360, thetaCurve);
     })
@@ -38,9 +38,9 @@ export const Drawing = ({ path, posMode, x, y, r, t, radius, scribeMode, sides, 
         return `${rad * Math.cos(deg2rad(i - 90))},${rad * Math.sin(deg2rad(i - 90))}`
     }).join(" ");
     const styles = {
-        fill: fill.option === "none" ? "none" : colors[fill.option] ?? fill.color,
-        stroke: stroke.option === "none" ? "none" : colors[stroke.option] ?? stroke.color,
-        strokeWidth: (stroke.value * stroke.unit * (stroke.useScale ? scale : 1)),
+        fill: fill.option === "tween" ? (tweenColors?.fill ?? "none") : fill.option === "none" ? "none" : colors[fill.option] ?? fill.color,
+        stroke: stroke.option === "tween" ? (tweenColors?.stroke ?? colors['foreground']) : stroke.option === "none" ? "none" : colors[stroke.option] ?? stroke.color,
+        strokeWidth: (stroke.value * stroke.unit * (stroke.useScale ? (tweenScale ?? 1) : 1)),
         transform: `translate(${cx}px, ${-cy}px) rotate(${rotation}deg)`
     }
     if (renderAsMask === "inverted") {

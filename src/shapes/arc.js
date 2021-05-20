@@ -6,14 +6,14 @@ import Field from '../ui/field';
 import Checkbox from '../ui/checkbox';
 import NumberInput from '../ui/numberinput';
 
-export const Drawing = ({ path, posMode, x, y, r, t, rotation, radialMode, radius, pie, coverage, fill, stroke, scale, visible, renderAsMask, colors }) => {
+export const Drawing = ({ path, posMode, x, y, r, t, rotation, radialMode, radius, pie, coverage, fill, stroke, tweenScale, visible, renderAsMask, colors, tweenColors }) => {
     if (!visible) { return null }
     const cx = posMode === 'cartesian' ? x.value * x.unit : (r.value * r.unit) * Math.cos((-t + 90) * Math.PI / 180);
     const cy = posMode === 'cartesian' ? y.value * y.unit : (r.value * r.unit) * Math.sin((-t + 90) * Math.PI / 180);
     const styles = {
-        fill: fill.option === "none" ? "none" : colors[fill.option] ?? fill.color,
-        stroke: stroke.option === "none" ? "none" : colors[stroke.option] ?? stroke.color,
-        strokeWidth: (stroke.value * stroke.unit * (stroke.useScale ? scale : 1)),
+        fill: fill.option === "tween" ? (tweenColors?.fill ?? "none") : fill.option === "none" ? "none" : colors[fill.option] ?? fill.color,
+        stroke: stroke.option === "tween" ? (tweenColors?.stroke ?? colors['foreground']) : stroke.option === "none" ? "none" : colors[stroke.option] ?? stroke.color,
+        strokeWidth: (stroke.value * stroke.unit * (stroke.useScale ? (tweenScale ?? 1) : 1)),
         transform: `translate(${cx}px,${-cy}px) rotate(${rotation}deg)`
     }
     if (renderAsMask === "inverted") {
@@ -24,7 +24,7 @@ export const Drawing = ({ path, posMode, x, y, r, t, rotation, radialMode, radiu
         styles.stroke = stroke.option === "foreground" ? "#fff" : stroke.option === "background" ? "#000" : "none";
     }
 
-    const rad = (radius.value * radius.unit * (radius.usesScale ? scale : 1));
+    const rad = (radius.value * radius.unit * (radius.usesScale ? (tweenScale ?? 1) : 1));
 
     const startX = rad * Math.cos((coverage.start - 90) * Math.PI / 180);
     const startY = rad * Math.sin((coverage.start - 90) * Math.PI / 180);
@@ -35,10 +35,6 @@ export const Drawing = ({ path, posMode, x, y, r, t, rotation, radialMode, radiu
     const d = `${pie ? `M 0,0 L ${startX},${startY}` : ` M ${startX},${startY}` } A ${rad},${rad} 0 0 1 ${midX},${midY} A ${rad},${rad} 0 0 1 ${endX},${endY} ${pie ? `L 0,0` : ""}`;
     // const d = `M 0,0 m 0,${-rO} a ${rO},${rO}, 0, 1, 0, 1, 0 Z M 0,0 m 0,${rI} a ${-rI},${-rI}, 0, 1, 1, 1, 0 Z`;
     return <path d={d} style={styles} />
-}
-
-Drawing.defaultProps ={
-    scale: 1
 }
 
 export const Interface = ({ layer, path, fromMask }) => {

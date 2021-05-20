@@ -10,7 +10,7 @@ import Field from '../ui/field';
 import Dropdown from '../ui/dropdown';
 import Interpolation from '../util/interpolation';
 
-export const Drawing = ({ path, posMode, x, y, r, t, fill, stroke, rotation, radialMode, inner, outer, radius, spread, thetaMode, count, step, coverage, toExtent, thetaCurve, scale, visible, renderAsMask, colors }) => {
+export const Drawing = ({ path, posMode, x, y, r, t, fill, stroke, rotation, radialMode, inner, outer, radius, spread, thetaMode, count, step, coverage, toExtent, thetaCurve, tweenScale, tweenColors, visible, renderAsMask, colors }) => {
     // thetaMode determines how objects are thrown around the circumference
     // radialMode determines the inner and outer radius of
     const cx = posMode === 'cartesian' ? x.value * x.unit : (r.value * r.unit) * Math.cos((-t + 90) * Math.PI / 180);
@@ -20,8 +20,8 @@ export const Drawing = ({ path, posMode, x, y, r, t, fill, stroke, rotation, rad
         return null;
     }
     const styles = {
-        stroke: stroke.option === "none" ? "none" : colors[stroke.option] ?? stroke.color,
-        strokeWidth: (stroke.value * stroke.unit * (stroke.useScale ? scale : 1))
+        stroke: stroke.option === "tween" ? (tweenColors?.stroke ?? colors['foreground']) : stroke.option === "none" ? "none" : colors[stroke.option] ?? stroke.color,
+        strokeWidth: (stroke.value * stroke.unit * (stroke.useScale ? (tweenScale ?? 1) : 1)),
     }
     if (renderAsMask === "inverted") {
         styles.stroke = stroke.option === "foreground" ? "#000" : stroke.option === "background" ? "#fff" : "none";
@@ -29,8 +29,8 @@ export const Drawing = ({ path, posMode, x, y, r, t, fill, stroke, rotation, rad
         styles.stroke = stroke.option === "foreground" ? "#fff" : stroke.option === "background" ? "#000" : "none";
     }
 
-    const rO = radialMode === "innerouter" ? (outer.value * outer.unit * (outer.useScale ? scale : 1)) : (radius.value * radius.unit * (radius.useScale ? scale : 1) + (spread.value * spread.unit * (spread.useScale ? scale : 1)) / 2);
-    const rI = radialMode === "innerouter" ? (inner.value * inner.unit * (inner.useScale ? scale : 1)) : (radius.value * radius.unit * (radius.useScale ? scale : 1) - (spread.value * spread.unit * (spread.useScale ? scale : 1)) / 2);
+    const rO = radialMode === "innerouter" ? (outer.value * outer.unit * (outer.useScale ? (tweenScale ?? 1) : 1)) : (radius.value * radius.unit * (radius.useScale ? (tweenScale ?? 1) : 1) + (spread.value * spread.unit * (spread.useScale ? (tweenScale ?? 1) : 1)) / 2);
+    const rI = radialMode === "innerouter" ? (inner.value * inner.unit * (inner.useScale ? (tweenScale ?? 1) : 1)) : (radius.value * radius.unit * (radius.useScale ? (tweenScale ?? 1) : 1) - (spread.value * spread.unit * (spread.useScale ? (tweenScale ?? 1) : 1)) / 2);
 
     const doOverlap = thetaMode === "startstop" && !toExtent;
 
@@ -42,10 +42,6 @@ export const Drawing = ({ path, posMode, x, y, r, t, fill, stroke, rotation, rad
         return <line key={n} x1={rI * cos} y1={rI * sin} x2={rO * cos} y2={rO * sin} style={styles} />
     })
     return <g style={{ transform: `translate(${cx}px,${-cy}px) rotate(${rotation}deg)`}}>{children}</g>
-}
-
-Drawing.defaultProps ={
-    scale: 1
 }
 
 export const Interface = ({ layer, path, fromMask }) => {
