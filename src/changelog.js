@@ -1,4 +1,7 @@
 const changelog = [
+    { version: "0.6.1", items: [
+        "Better handled color interpolation on nested arrays"
+    ]},
     { version: "0.6.0", items: [
         "Added Color Interpolation for VertexArray and RadialArray"
     ]},

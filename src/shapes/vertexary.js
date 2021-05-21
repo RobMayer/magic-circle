@@ -19,7 +19,7 @@ const getRadius = (radius, scribe, sides) => {
     }
 }
 
-export const Drawing = ({ path, posMode, x, y, r, t, rotation, radius, scribeMode, thetaMode, count, layers, scaleCurve, thetaCurve, scaleFactor, tweenScale, visible, renderAsMask, colors,
+export const Drawing = ({ path, posMode, x, y, r, t, rotation, radius, scribeMode, thetaMode, count, layers, scaleCurve, thetaCurve, scaleFactor, tweenColors, tweenScale, visible, renderAsMask, colors,
     colorFactorStroke, colorSpaceStroke, colorCurveStroke,
     colorFactorFill, colorSpaceFill, colorCurveFill
  }) => {
@@ -36,8 +36,8 @@ export const Drawing = ({ path, posMode, x, y, r, t, rotation, radius, scribeMod
         const coeff = Interpolation.lerp(Interpolation.delerp(n, 0, count), 0, 360, thetaCurve) - 180;
         const s = Interpolation.lerp(Interpolation.delerp(n, 0, count), 1 * scaleFactor.start, 1 * scaleFactor.end, scaleCurve);
         const c = {
-            stroke: colorFactorStroke?.start && colorFactorStroke?.end ? "#" + Interpolation.colorlerp(Interpolation.delerp(n, 0, count), colorFactorStroke.start, colorFactorStroke.end, colorSpaceStroke, colorCurveStroke) : null,
-            fill: colorFactorFill?.start && colorFactorFill?.end ? "#" + Interpolation.colorlerp(Interpolation.delerp(n, 0, count), colorFactorFill.start, colorFactorFill.end, colorSpaceFill, colorCurveFill) : null
+            stroke: colorFactorStroke?.start && colorFactorStroke?.end ? "#" + Interpolation.colorlerp(Interpolation.delerp(n, 0, count), colorFactorStroke.start, colorFactorStroke.end, colorSpaceStroke, colorCurveStroke) : (tweenColors?.stroke ?? null),
+            fill: colorFactorFill?.start && colorFactorFill?.end ? "#" + Interpolation.colorlerp(Interpolation.delerp(n, 0, count), colorFactorFill.start, colorFactorFill.end, colorSpaceFill, colorCurveFill) : (tweenColors?.fill ?? null)
         }
         const nested = layers.map((layer, i) => {
             return <Shape.Drawing key={i} {...layer} path={[...path, 'layers', i]} tweenScale={s} tweenColors={c} renderAsMask={renderAsMask} colors={colors} />

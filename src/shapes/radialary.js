@@ -13,7 +13,7 @@ import Dropdown from '../ui/dropdown';
 import LayerList from './layerlist';
 import Interpolation from '../util/interpolation';
 
-export const Drawing = ({ path, posMode, x, y, r, t, rotation, radialMode, inner, outer, radius, spread, thetaMode, count, step, coverage, skipLast, layers, scaleCurve, radialCurve, thetaCurve, scaleFactor, tweenScale, visible, renderAsMask, colors,
+export const Drawing = ({ path, posMode, x, y, r, t, rotation, radialMode, inner, outer, radius, spread, thetaMode, count, step, coverage, skipLast, layers, scaleCurve, radialCurve, thetaCurve, scaleFactor, tweenScale, tweenColors, visible, renderAsMask, colors,
     colorFactorStroke, colorSpaceStroke, colorCurveStroke,
     colorFactorFill, colorSpaceFill, colorCurveFill
 }) => {
@@ -37,8 +37,8 @@ export const Drawing = ({ path, posMode, x, y, r, t, rotation, radialMode, inner
         const angle = thetaMode === "startstop" ? Interpolation.lerp(cA, 1 * coverage.start, 1 * coverage.end, thetaCurve) : step * n;
         const s = Interpolation.lerp(coeff, 1 * scaleFactor.start, 1 * scaleFactor.end, scaleCurve);
         const c = {
-            stroke: colorFactorStroke?.start && colorFactorStroke?.end ? "#" + Interpolation.colorlerp(Interpolation.delerp(n, 0, count), colorFactorStroke.start, colorFactorStroke.end, colorSpaceStroke, colorCurveStroke) : null,
-            fill: colorFactorFill?.start && colorFactorFill?.end ? "#" + Interpolation.colorlerp(Interpolation.delerp(n, 0, count), colorFactorFill.start, colorFactorFill.end, colorSpaceFill, colorCurveFill) : null
+            stroke: colorFactorStroke?.start && colorFactorStroke?.end ? "#" + Interpolation.colorlerp(Interpolation.delerp(n, 0, count), colorFactorStroke.start, colorFactorStroke.end, colorSpaceStroke, colorCurveStroke) : (tweenColors?.stroke ?? null),
+            fill: colorFactorFill?.start && colorFactorFill?.end ? "#" + Interpolation.colorlerp(Interpolation.delerp(n, 0, count), colorFactorFill.start, colorFactorFill.end, colorSpaceFill, colorCurveFill) : (tweenColors?.fill ?? null)
         }
         const rad = Interpolation.lerp(coeff, rI, rO, radialCurve);
         const nested = layers.map((layer, i) => {
