@@ -1,4 +1,7 @@
 const changelog = [
+    { version: "0.7.2", items: [
+        "It'd be nice if you could change the Units on the Canvas, wouldn't it?"
+    ]},
     { version: "0.7.1", items: [
         "Fixed a mishandling of an edge case with the gradient input.",
         "Fixed the Square-Root distribution not being selectable."

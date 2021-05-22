@@ -12,7 +12,7 @@ import Icon from './ui/icon';
 import LogModal from './ui/logmodal';
 import ExportModal from './ui/exportmodal';
 
-const version = "0.7.1";
+const version = "0.7.2";
 
 const handleUpload = (element, file, dispatch) => {
     if (file) {
@@ -159,8 +159,8 @@ function App() {
                 </div>
                 <div className='controls'>
                     <Field.Group label={"Canvas"}>
-                        <Prefabs.Length label={"Width"} value={state.dimensions.w} path={`dimensions.w`} dispatch={dispatch} />
-                        <Prefabs.Length label={"Height"} value={state.dimensions.h} path={`dimensions.h`} dispatch={dispatch} />
+                        <Prefabs.Length label={"Width"} value={state.dimensions.w} path={['dimensions', 'w']} />
+                        <Prefabs.Length label={"Height"} value={state.dimensions.h} path={['dimensions', 'h']} />
                     </Field.Group>
                     <Field.Group label={"Global Colors"}>
                         <Field label={"Foreground"}>
