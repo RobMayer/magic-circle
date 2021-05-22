@@ -1,15 +1,15 @@
 import Shape from './';
-import { useContext } from 'react';
-import { DispatchContext } from '../contexts';
-import { LayerWrapper, onChange } from '../ui/common';
+import { LayerWrapper } from '../ui/common';
 import Prefabs from '../ui/prefabs';
 import { range } from 'lodash';
 import NumberInput from '../ui/numberinput';
+import Checkbox from '../ui/checkbox';
 import Field from '../ui/field';
 import Dropdown from '../ui/dropdown';
-import ColorInput from '../ui/colorinput';
+import GradientInput from '../ui/gradientinput';
 import LayerList from './layerlist';
 import Interpolation from '../util/interpolation';
+import Gradient from '../util/gradient';
 
 const getRadius = (radius, scribe, sides) => {
     switch (scribe) {
@@ -19,9 +19,7 @@ const getRadius = (radius, scribe, sides) => {
     }
 }
 
-export const Drawing = ({ path, posMode, x, y, r, t, rotation, radius, scribeMode, thetaMode, count, layers, scaleCurve, thetaCurve, scaleFactor, tweenColors, tweenScale, visible, renderAsMask, colors,
-    colorFactorStroke, colorSpaceStroke, colorCurveStroke,
-    colorFactorFill, colorSpaceFill, colorCurveFill
+export const Drawing = ({ path, posMode, x, y, r, t, rotation, radius, scribeMode, thetaMode, count, layers, scaleCurve, thetaCurve, scaleFactor, tweenColors, tweenScale, visible, renderAsMask, colors, colorFactorFill, colorFactorStroke, colorFactorInherit
  }) => {
     if (!visible) { return null }
     if (count <= 0 || layers.length <= 0) {
@@ -36,11 +34,11 @@ export const Drawing = ({ path, posMode, x, y, r, t, rotation, radius, scribeMod
         const coeff = Interpolation.lerp(Interpolation.delerp(n, 0, count), 0, 360, thetaCurve) - 180;
         const s = Interpolation.lerp(Interpolation.delerp(n, 0, count), 1 * scaleFactor.start, 1 * scaleFactor.end, scaleCurve);
         const c = {
-            stroke: colorFactorStroke?.start && colorFactorStroke?.end ? "#" + Interpolation.colorlerp(Interpolation.delerp(n, 0, count), colorFactorStroke.start, colorFactorStroke.end, colorSpaceStroke, colorCurveStroke) : (tweenColors?.stroke ?? null),
-            fill: colorFactorFill?.start && colorFactorFill?.end ? "#" + Interpolation.colorlerp(Interpolation.delerp(n, 0, count), colorFactorFill.start, colorFactorFill.end, colorSpaceFill, colorCurveFill) : (tweenColors?.fill ?? null)
+            stroke: Gradient.fromString(colorFactorStroke).getColorAt(Interpolation.delerp(n, 0, count)),
+            fill: Gradient.fromString(colorFactorFill).getColorAt(Interpolation.delerp(n, 0, count))
         }
         const nested = layers.map((layer, i) => {
-            return <Shape.Drawing key={i} {...layer} path={[...path, 'layers', i]} tweenScale={s} tweenColors={c} renderAsMask={renderAsMask} colors={colors} />
+            return <Shape.Drawing key={i} {...layer} path={[...path, 'layers', i]} tweenScale={s} tweenColors={colorFactorInherit ? (tweenColors ?? c) : c} renderAsMask={renderAsMask} colors={colors} />
         });
         return <g key={n} style={{ transform: `rotate(${coeff}deg) translate(0px, ${rad}px)`}}>{nested}</g>
     })
@@ -48,80 +46,48 @@ export const Drawing = ({ path, posMode, x, y, r, t, rotation, radius, scribeMod
 }
 
 export const Interface = ({ layer, path, fromMask }) => {
-    const dispatch = useContext(DispatchContext);
     return <LayerWrapper layer={layer} path={path} name='Vertex Array' withVisibility>
         <Field label={"Count"}>
-            <NumberInput value={layer.count} onChange={onChange(dispatch, [...path, 'count'])} min={0} />
+            <NumberInput value={layer.count} onDispatch={[...path, 'count']} min={0} />
         </Field>
-        <Prefabs.Length label={"Radius"} value={layer.radius} dispatch={dispatch} path={[...path, 'radius']} min={0} withScale />
+        <Prefabs.Length label={"Radius"} value={layer.radius} path={[...path, 'radius']} min={0} withScale />
         <Field label={"Scribe Mode"}>
-            <Dropdown value={layer.scribeMode} onChange={onChange(dispatch, [...path, 'scribeMode'])}>
+            <Dropdown value={layer.scribeMode} onDispatch={[...path, 'scribeMode']}>
                 <option value={'circumscribe'}>Circumscribe</option>
                 <option value={'inscribe'}>Inscribe</option>
                 <option value={'middle'}>Middle</option>
             </Dropdown>
         </Field>
         <Field label={"Distribution"}>
-            <Dropdown value={layer.thetaCurve} onChange={onChange(dispatch, [...path, 'thetaCurve'])}>
-                {Object.keys(Interpolation.curves).map((curve) => {
-                    return <option key={curve} value={curve}>{curve}</option>
+            <Dropdown value={layer.thetaCurve} onDispatch={[...path, 'thetaCurve']}>
+                {Object.entries(Interpolation.CURVE_NAMES).map(([k, v]) => {
+                    return <option key={k} value={k}>{v}</option>
                 })}
             </Dropdown>
         </Field>
-        <Field.Group label={"Interpolation"}>
+        <Field.Group label={"Sub-Layer Interpolation"}>
             <Field.Row label={"Scale"}>
-                <Field label={"Start"}><NumberInput value={layer.scaleFactor.start} onChange={onChange(dispatch, [...path, 'scaleFactor', 'start'])} step={0.001} min={0} /></Field>
-                <Field label={"End"}><NumberInput value={layer.scaleFactor.end} onChange={onChange(dispatch, [...path, 'scaleFactor', 'end'])} step={0.001} min={0} /></Field>
+                <Field label={"Start"}><NumberInput value={layer.scaleFactor.start} onDispatch={[...path, 'scaleFactor', 'start']} step={0.001} min={0} /></Field>
+                <Field label={"End"}><NumberInput value={layer.scaleFactor.end} onDispatch={[...path, 'scaleFactor', 'end']} step={0.001} min={0} /></Field>
                 <Field label={"Distribution"}>
-                    <Dropdown value={layer.scaleCurve} onChange={onChange(dispatch, [...path, 'scaleCurve'])}>
-                        {Object.keys(Interpolation.curves).map((curve) => {
-                            return <option key={curve} value={curve}>{curve}</option>
-                        })}
-                    </Dropdown>
-                </Field>
-            </Field.Row>
-            <Field.Row label={"Stroke"}>
-                <Field label={"Start"}><ColorInput value={layer.colorFactorStroke.start} onChange={onChange(dispatch, [...path, 'colorFactorStroke', 'start'])} /></Field>
-                <Field label={"End"}><ColorInput value={layer.colorFactorStroke.end} onChange={onChange(dispatch, [...path, 'colorFactorStroke', 'end'])} /></Field>
-            </Field.Row>
-            <Field.Row label={""}>
-                <Field label={"ColorSpace"}>
-                    <Dropdown value={layer.colorSpaceStroke} onChange={onChange(dispatch, [...path, 'colorSpaceStroke'])}>
-                        {Object.entries(Interpolation.COLORSPACE_NAMES).map(([k, v]) => {
+                    <Dropdown value={layer.scaleCurve} onDispatch={[...path, 'scaleCurve']}>
+                        {Object.entries(Interpolation.CURVE_NAMES).map(([k, v]) => {
                             return <option key={k} value={k}>{v}</option>
                         })}
                     </Dropdown>
                 </Field>
-                <Field label={"Distribution"}>
-                    <Dropdown value={layer.colorCurveStroke} onChange={onChange(dispatch, [...path, 'colorCurveStroke'])}>
-                        {Object.keys(Interpolation.curves).map((curve) => {
-                            return <option key={curve} value={curve}>{curve}</option>
-                        })}
-                    </Dropdown>
-                </Field>
             </Field.Row>
-            <Field.Row label={"Fill"}>
-                <Field label={"Start"}><ColorInput value={layer.colorFactorFill.start} onChange={onChange(dispatch, [...path, 'colorFactorFill', 'start'])} /></Field>
-                <Field label={"End"}><ColorInput value={layer.colorFactorFill.end} onChange={onChange(dispatch, [...path, 'colorFactorFill', 'end'])} /></Field>
-            </Field.Row>
-            <Field.Row>
-                <Field label={"ColorSpace"}>
-                    <Dropdown value={layer.colorSpaceFill} onChange={onChange(dispatch, [...path, 'colorSpaceFill'])}>
-                        {Object.entries(Interpolation.COLORSPACE_NAMES).map(([k, v]) => {
-                            return <option key={k} value={k}>{v}</option>
-                        })}
-                    </Dropdown>
-                </Field>
-                <Field label={"Distribution"}>
-                    <Dropdown value={layer.colorCurveFill} onChange={onChange(dispatch, [...path, 'colorCurveFill'])}>
-                        {Object.keys(Interpolation.curves).map((curve) => {
-                            return <option key={curve} value={curve}>{curve}</option>
-                        })}
-                    </Dropdown>
-                </Field>
-            </Field.Row>
+            <Field label={"Stroke"} columns={"1fr min-content"}>
+                <GradientInput value={layer.colorFactorStroke} onDispatch={[...path, 'colorFactorStroke']} />
+            </Field>
+            <Field label={"Fill"} columns={"1fr min-content"}>
+                <GradientInput value={layer.colorFactorFill} onDispatch={[...path, 'colorFactorFill']} />
+            </Field>
+            <Field>
+                <Checkbox value={layer.colorFactorInherit} onDispatch={[...path, 'colorFactorInherit']} label={"Inherit Color Interpolation from Parent"} />
+            </Field>
         </Field.Group>
-        <Prefabs.Transforms layer={layer} path={path} dispatch={dispatch} withRotation />
+        <Prefabs.Transforms layer={layer} path={path} withRotation />
         <Field.Heading>Sub Layers</Field.Heading>
         <LayerList.Interface path={[...path, 'layers']} layers={layer.layers} fromMask={fromMask} />
     </LayerWrapper>

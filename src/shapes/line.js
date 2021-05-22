@@ -1,6 +1,4 @@
-import { useContext } from 'react';
-import { DispatchContext } from '../contexts';
-import { LayerWrapper, onChange, onValue } from '../ui/common';
+import { LayerWrapper } from '../ui/common';
 import Prefabs from '../ui/prefabs';
 import Field from '../ui/field';
 import Tabs from '../ui/tabs';
@@ -25,35 +23,34 @@ export const Drawing = ({ path, posMode, x1, y1, r1, t1, x2, y2, r2, t2, rotatio
 }
 
 export const Interface = ({ layer, path, fromMask }) => {
-    const dispatch = useContext(DispatchContext);
     return <LayerWrapper layer={layer} path={path} name='Line' withVisibility>
-        <Tabs value={layer.posMode} onChange={onValue(dispatch, [...path, 'posMode'])}>
+        <Tabs value={layer.posMode} onDispatch={[...path, 'posMode']}>
             <Tabs.Option value={"polar"} label={"Polar"}>
                 <Field.Row label={"Start"}>
-                    <Prefabs.Length label={"Distance"} dispatch={dispatch} value={layer.r1} path={[...path, 'r1']} />
+                    <Prefabs.Length label={"Distance"} value={layer.r1} path={[...path, 'r1']} />
                     <Field label={"Angle"}>
-                        <NumberInput value={layer.t1} onChange={onChange(dispatch, [...path, 't1'])} step={0.001} />
+                        <NumberInput value={layer.t1} onDispatch={[...path, 't1']} step={0.001} />
                     </Field>
                 </Field.Row>
                 <Field.Row label={"End"}>
-                    <Prefabs.Length label={"Distance"} dispatch={dispatch} value={layer.r2} path={[...path, 'r2']} />
+                    <Prefabs.Length label={"Distance"} value={layer.r2} path={[...path, 'r2']} />
                     <Field label={"Angle"}>
-                        <NumberInput value={layer.t2} onChange={onChange(dispatch, [...path, 't2'])} step={0.001} />
+                        <NumberInput value={layer.t2} onDispatch={[...path, 't2']} step={0.001} />
                     </Field>
                 </Field.Row>
             </Tabs.Option>
             <Tabs.Option value={"cartesian"} label={"Cartesian"}>
                 <Field.Row label={"Start"}>
-                    <Prefabs.Length label={"X Position"} dispatch={dispatch} value={layer.x1} path={[...path, 'x1']} />
-                    <Prefabs.Length label={"Y Position"} dispatch={dispatch} value={layer.y1} path={[...path, 'y1']} />
+                    <Prefabs.Length label={"X Position"} value={layer.x1} path={[...path, 'x1']} />
+                    <Prefabs.Length label={"Y Position"} value={layer.y1} path={[...path, 'y1']} />
                 </Field.Row>
                 <Field.Row label={"End"}>
-                    <Prefabs.Length label={"X Position"} dispatch={dispatch} value={layer.x2} path={[...path, 'x2']} />
-                    <Prefabs.Length label={"Y Position"} dispatch={dispatch} value={layer.y2} path={[...path, 'y2']} />
+                    <Prefabs.Length label={"X Position"} value={layer.x2} path={[...path, 'x2']} />
+                    <Prefabs.Length label={"Y Position"} value={layer.y2} path={[...path, 'y2']} />
                 </Field.Row>
             </Tabs.Option>
         </Tabs>
-        <Prefabs.Appearance layer={layer} path={path} dispatch={dispatch} withStroke fromMask={fromMask} />
+        <Prefabs.Appearance layer={layer} path={path} withStroke fromMask={fromMask} />
     </LayerWrapper>
 }
 

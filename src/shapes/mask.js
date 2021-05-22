@@ -1,6 +1,4 @@
-import { useContext } from 'react';
-import { DispatchContext } from '../contexts';
-import { LayerWrapper, onValue } from '../ui/common';
+import { LayerWrapper } from '../ui/common';
 import Prefabs from '../ui/prefabs';
 import Field from '../ui/field';
 import LayerList from './layerlist';
@@ -30,14 +28,13 @@ export const Drawing = ({ path, posMode, x, y, r, t, rotation, masks, layers, tw
 }
 
 export const Interface = ({ layer, path, fromMask }) => {
-    const dispatch = useContext(DispatchContext);
     return <LayerWrapper layer={layer} path={path} name='Mask' withVisibility>
-        <Prefabs.Transforms layer={layer} path={path} dispatch={dispatch} withRotation />
+        <Prefabs.Transforms layer={layer} path={path} withRotation />
         <Field label={"Invert Mask"} inlineLabel>
-            <Checkbox value={layer.invertMask} onChange={onValue(dispatch, [...path, 'invertMask'])} />
+            <Checkbox value={layer.invertMask} onDispatch={[...path, 'invertMask']} />
         </Field>
         <Field label={"Show Mask"} inlineLabel>
-            <Checkbox value={layer.showMask} onChange={onValue(dispatch, [...path, 'showMask'])} />
+            <Checkbox value={layer.showMask} onDispatch={[...path, 'showMask']} />
         </Field>
         <Field.Heading>Mask</Field.Heading>
         <LayerList.Interface path={[...path, 'masks']} layers={layer.masks} fromMask />

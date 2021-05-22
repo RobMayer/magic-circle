@@ -1,6 +1,4 @@
-import { useContext } from 'react';
-import { DispatchContext } from '../contexts';
-import { LayerWrapper, onChange, onValue } from '../ui/common';
+import { LayerWrapper } from '../ui/common';
 import Prefabs from '../ui/prefabs';
 import Field from '../ui/field';
 import Checkbox from '../ui/checkbox';
@@ -38,20 +36,20 @@ export const Drawing = ({ path, posMode, x, y, r, t, rotation, radialMode, radiu
 }
 
 export const Interface = ({ layer, path, fromMask }) => {
-    const dispatch = useContext(DispatchContext);
+    console.log(path);
     return <LayerWrapper layer={layer} path={path} name='Arc' withVisibility>
-        <Prefabs.Length label={"Radius"} value={layer.radius} dispatch={dispatch} path={[...path, 'radius']} min={0} withScale />
+        <Prefabs.Length label={"Radius"} value={layer.radius} path={[...path, 'radius']} min={0} withScale />
         <Field label={"Start θ"} tooltip={"Start Angle"}>
-            <NumberInput value={layer.coverage.start} onChange={onChange(dispatch, [...path, 'coverage', 'start'])} min={0} max={360} />
+            <NumberInput value={layer.coverage.start} onDispatch={[...path, 'coverage', 'start']} min={0} max={360} />
         </Field>
         <Field label={"End θ"} tooltip={"End Angle"}>
-            <NumberInput value={layer.coverage.end} onChange={onChange(dispatch, [...path, 'coverage', 'end'])} min={0} max={360} />
+            <NumberInput value={layer.coverage.end} onDispatch={[...path, 'coverage', 'end']} min={0} max={360} />
         </Field>
         <Field label={"Pie Slice"} tooltip={"Draw Lines to Center"} inlineLabel>
-            <Checkbox value={layer.pie} onChange={onValue(dispatch, [...path, 'pie'])} />
+            <Checkbox value={layer.pie} onDispatch={[...path, 'pie']} />
         </Field>
-        <Prefabs.Transforms layer={layer} path={path} dispatch={dispatch} withRotation />
-        <Prefabs.Appearance layer={layer} path={path} dispatch={dispatch} withFill withStroke fromMask={fromMask} />
+        <Prefabs.Transforms layer={layer} path={path} withRotation />
+        <Prefabs.Appearance layer={layer} path={path} withFill withStroke fromMask={fromMask} />
     </LayerWrapper>
 }
 

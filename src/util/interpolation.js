@@ -329,16 +329,25 @@ export const COLORSPACE_NAMES = {
 
 /* CURVES */
 
-const generateCurves = (name, func) => {
+const generateCurves = (key, func) => {
     return {
-        [`${name}_in`] : a => func(a),
-        [`${name}_out`] : a => 1 - func(1 - a),
-        [`${name}_inout`] : a => a < 0.5 ? func(a * 2) / 2 : a > 0.5 ? 1 - func(a * -2 + 2) / 2 : 0.5,
-        [`${name}_outin`] : a => a < 0.5 ? 0.5 - func(1 - a * 2) / 2 : a > 0.5 ? 0.5 + func(a * 2 - 1) / 2 : 0.5
+        [`${key}_in`] : a => func(a),
+        [`${key}_out`] : a => 1 - func(1 - a),
+        [`${key}_inout`] : a => a < 0.5 ? func(a * 2) / 2 : a > 0.5 ? 1 - func(a * -2 + 2) / 2 : 0.5,
+        [`${key}_outin`] : a => a < 0.5 ? 0.5 - func(1 - a * 2) / 2 : a > 0.5 ? 0.5 + func(a * 2 - 1) / 2 : 0.5
     }
 }
 
-export const curves = {
+const nameCurves = (key, name) => {
+    return {
+        [`${key}_in`] : `${name} In`,
+        [`${key}_out`] : `${name} Out`,
+        [`${key}_inout`] : `${name} In-Out`,
+        [`${key}_outin`] : `${name} Out-In`
+    }
+}
+
+export const CURVES = {
     linear: a => a,
     ...generateCurves("quadratic", a => Math.pow(a, 2)),
     ...generateCurves("cubic", a => Math.pow(a, 3)),
@@ -349,9 +358,20 @@ export const curves = {
     ...generateCurves("rootic", a => Math.sqrt(a))
 }
 
+export const CURVE_NAMES = {
+    linear: "Linear",
+    ...nameCurves("quadratic", "Quadratic"),
+    ...nameCurves("cubic", "Cubic"),
+    ...nameCurves("semiquadratic", "Semi-Quadratic"),
+    ...nameCurves("exponential", "Exponential"),
+    ...nameCurves("sinic", "Sine Curve"),
+    ...nameCurves("cosinic", "Cosine Curve"),
+    ...nameCurves("root", "Square Root")
+}
+
 export const lerp = (t, a, b, curve = "linear") => {
-    if (!(curve in curves)) { curve = "linear"; }
-    t = curves[curve](t);
+    if (!(curve in CURVES)) { curve = "linear"; }
+    t = CURVES[curve](t);
     return a + t * (b - a);
 }
 
@@ -364,7 +384,7 @@ export const DIRECTIONS = ["closest", "farthest", "closestplus", "closestminus",
 export const clerp = (t, a, b, mode = "closestplus") => {
     if (DIRECTIONS.includes(mode)) {
         if (mode === "closest") { mode = "closestplus"; }
-        if (mode === "farthest") { mode = "farthestminus"; }
+        if (mode === "farthest") { mode = "farthestplus"; }
         if (mode === "closestplus") { mode = Math.abs(b - a) > 0.5 ? "minus" : "plus"; }
         if (mode === "closestminus") { mode = Math.abs(b - a) >= 0.5 ? "minus" : "plus"; }
         if (mode === "farthestplus") { mode = Math.abs(b - a) >= 0.5 ? "plus" : "minus"; }
@@ -383,8 +403,8 @@ export const colorlerp = (step, from, to, colorspace = "rgb", curve = "linear") 
     colorspace = colorspace.toLowerCase().split("_");
     from = parse(from);
     to = parse(to);
-    if (!(curve in curves)) { curve = "linear"; }
-    step = curves[curve](step);
+    if (!(curve in CURVES)) { curve = "linear"; }
+    step = CURVES[curve](step);
     const space = colorspace[0];
     const dir = colorspace?.[1] ?? "closest";
     if (!COLORSPACES.includes(space) || space === "hex" || !DIRECTIONS.includes(dir) || from === null || to === null) {
@@ -463,7 +483,9 @@ const output = {
     delerp,
     colorlerp,
     clerp,
-    curves,
-    COLORSPACE_NAMES
+    CURVES,
+    CURVE_NAMES,
+    COLORSPACE_NAMES,
+    parseColor: parse
 }
 export default output;

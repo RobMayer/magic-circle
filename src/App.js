@@ -12,7 +12,7 @@ import Icon from './ui/icon';
 import LogModal from './ui/logmodal';
 import ExportModal from './ui/exportmodal';
 
-const version = "0.5.0";
+const version = "0.7.0";
 
 const handleUpload = (element, file, dispatch) => {
     if (file) {
@@ -105,7 +105,8 @@ function App() {
     const rH = cw / ch * 100; // 16/9
     const rW = ch / cw * 100;
 
-    return <div id="app">
+    return <DispatchContext.Provider value={dispatch}>
+        <div id="app">
         <div id="viewport" style={{ backgroundColor: state.colors.viewport }}>
             <div id="canvas" style={{ maxWidth: `${rH}vh`, height:`${rW}vw` }}>
                 <svg id="export" viewBox={`${cw / -2} ${ch / -2} ${cw} ${ch}`} style={{ backgroundColor: state.colors.canvas }}>
@@ -122,7 +123,7 @@ function App() {
                 <div className='controls'>
                 <Field.Group label={"About"}>
                     <Field.Row label={"Ver"}>
-                        <code>{version} [<button className='link' onClick={() => { console.log(modal); setModal("changelog"); }}>Changelog</button>]</code>
+                        <code>{version} [<button className='link' onClick={() => { setModal("changelog"); }}>Changelog</button>]</code>
                     </Field.Row>
                     <Field.Row label={<Icon.TWITTER className={"large"} />}>
                         <a href='https://twitter.com/ThatRobHuman' rel='noreferrer' target='_blank'>@ThatRobHuman</a>
@@ -177,18 +178,17 @@ function App() {
                     </Field.Group>
                 </div>
                 <Field.Heading>Layers</Field.Heading>
-                <DispatchContext.Provider value={dispatch}>
                     <CanvasContext.Provider value={state.dimensions}>
                         <ClipboardContext.Provider value={clipboard}>
                             <LayerList.Interface layers={state.layers} path={["layers"]} />
                         </ClipboardContext.Provider>
                     </CanvasContext.Provider>
-                </DispatchContext.Provider>
-            </div>
+                </div>
         : null }
         <LogModal isOpen={modal === "changelog"} close={setModal} />
         <ExportModal isOpen={modal === "export"} close={setModal} canvas={state.dimensions} name={state.name} />
     </div>
+    </DispatchContext.Provider>
 }
 
 export default App;

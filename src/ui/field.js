@@ -27,9 +27,9 @@ const SubHeading = ({ children }) => {
     return <div className={`subheading`}>{children}</div>
 }
 
-const Row = ({ children, label, className, tooltip }) => {
-    return <div className={`row ${className ?? ""}`} title={tooltip}>
-        <div className='row_label'>{label}</div>
+const Row = ({ children, label, className, tooltip, columns}) => {
+    return <div className={`row ${className ?? ""} ${label ? "with-label" : ""}`} title={tooltip} style={{ gridAutoColumns: columns ?? "1fr" }}>
+        {label ? <div className='row_label'>{label}</div> : null }
         {children}
     </div>
 }

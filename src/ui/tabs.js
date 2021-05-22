@@ -1,15 +1,24 @@
-import { Children } from 'react';
+import { Children, useCallback, useContext } from 'react';
+import { DispatchContext } from '../contexts';
 
 const Option = ({ children }) => {
     return <>{children}</>
 }
 
-const Tabs = ({ value, onChange, children }) => {
+const Tabs = ({ value, onSelect, onDispatch, children }) => {
+    const dispatcher = useContext(DispatchContext);
+    const onClick = useCallback((value) => {
+        onSelect?.(value);
+        if (onDispatch && dispatcher) {
+            dispatcher?.({ path: onDispatch, action: "edit", value })
+        }
+    }, [onSelect, onDispatch, dispatcher])
+
     let nC = null;
     const labels = [];
     Children.forEach(children, (child, i) => {
         if (child.type === Option) {
-            labels.push(<button disabled={child.props.disabled ?? false} className={`tabs_option ${child.props.value === value ? "option-active" : "option-passive"}`} key={child.key ?? i} onClick={() => { onChange(child.props.value) }}>{child.props.label}</button>);
+            labels.push(<button disabled={child.props.disabled ?? false} className={`tabs_option ${child.props.value === value ? "option-active" : "option-passive"}`} key={child.key ?? i} onClick={() => { onClick(child.props.value) }}>{child.props.label}</button>);
             if (child.props.value === value) {
                 nC = child;
             }

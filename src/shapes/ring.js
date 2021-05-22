@@ -1,6 +1,4 @@
-import { useContext } from 'react';
-import { DispatchContext } from '../contexts';
-import { LayerWrapper, onValue } from '../ui/common';
+import { LayerWrapper } from '../ui/common';
 import Prefabs from '../ui/prefabs';
 import Tabs from '../ui/tabs';
 
@@ -33,20 +31,19 @@ Drawing.defaultProps ={
 }
 
 export const Interface = ({ layer, path, fromMask }) => {
-    const dispatch = useContext(DispatchContext);
     return <LayerWrapper layer={layer} path={path} name='Ring' withVisibility>
-        <Tabs value={layer.radialMode} onChange={onValue(dispatch, [...path, 'radialMode'])}>
+        <Tabs value={layer.radialMode} onDispatch={[...path, 'radialMode']}>
             <Tabs.Option value={"innerouter"} label={"Inner / Outer"}>
-                <Prefabs.Length label={"Radius (Inner)"} value={layer.inner} dispatch={dispatch} path={[...path, 'inner']} min={0} withScale />
-                <Prefabs.Length label={"Radius (Outer)"} value={layer.outer} dispatch={dispatch} path={[...path, 'outer']} min={0} withScale />
+                <Prefabs.Length label={"Radius (Inner)"} value={layer.inner} path={[...path, 'inner']} min={0} withScale />
+                <Prefabs.Length label={"Radius (Outer)"} value={layer.outer} path={[...path, 'outer']} min={0} withScale />
             </Tabs.Option>
             <Tabs.Option value={"radiusspread"} label={"Radius / Spread"}>
-                <Prefabs.Length label={"Radius"} value={layer.radius} dispatch={dispatch} path={[...path, 'radius']} min={0} withScale />
-                <Prefabs.Length label={"Spread"} value={layer.spread} dispatch={dispatch} path={[...path, 'spread']} min={0} withScale />
+                <Prefabs.Length label={"Radius"} value={layer.radius} path={[...path, 'radius']} min={0} withScale />
+                <Prefabs.Length label={"Spread"} value={layer.spread} path={[...path, 'spread']} min={0} withScale />
             </Tabs.Option>
         </Tabs>
-        <Prefabs.Transforms layer={layer} path={path} dispatch={dispatch} />
-        <Prefabs.Appearance layer={layer} path={path} dispatch={dispatch} withFill withStroke fromMask={fromMask} />
+        <Prefabs.Transforms layer={layer} path={path} />
+        <Prefabs.Appearance layer={layer} path={path} withFill withStroke fromMask={fromMask} />
     </LayerWrapper>
 }
 

@@ -1,6 +1,6 @@
 import { useContext } from 'react';
-import { DispatchContext, CanvasContext } from '../contexts';
-import { LayerWrapper, onChange } from '../ui/common';
+import { CanvasContext } from '../contexts';
+import { LayerWrapper } from '../ui/common';
 import Prefabs from '../ui/prefabs';
 import Field from '../ui/field';
 import BlockInput from '../ui/blockinput';
@@ -27,7 +27,6 @@ export const Drawing = ({ path, posMode, x, y, r, t, s, rotation, definition, fi
 }
 
 export const Interface = ({ layer, path, fromMask }) => {
-    const dispatch = useContext(DispatchContext);
     const { w, h } = useContext(CanvasContext);
     return <LayerWrapper layer={layer} path={path} name='Path' withVisibility>
         <Warning title={"Proceed With Caution"}>
@@ -35,10 +34,10 @@ export const Interface = ({ layer, path, fromMask }) => {
             <p>This path is dependant on the coordinate system of the canvas. For your reference, know that the canvas's viewBox is '<code className='highlight selectable'>{`${w.value * w.unit / -2} ${h.value * h.unit / -2} ${w.value * w.unit} ${h.value * h.unit}`}</code>' and all points are drawn in that coordinate space.</p>
         </Warning>
         <Field label={"Definition"}>
-            <BlockInput value={layer.definition} onChange={onChange(dispatch, [...path, 'definition'])} />
+            <BlockInput value={layer.definition} onDispatch={[...path, 'definition']} />
         </Field>
-        <Prefabs.Transforms layer={layer} path={path} dispatch={dispatch} withRotation withScale />
-        <Prefabs.Appearance layer={layer} path={path} dispatch={dispatch} withFill withStroke fromMask={fromMask} />
+        <Prefabs.Transforms layer={layer} path={path} withRotation withScale />
+        <Prefabs.Appearance layer={layer} path={path} withFill withStroke fromMask={fromMask} />
     </LayerWrapper>
 }
 

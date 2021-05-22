@@ -1,10 +1,10 @@
 import { get } from 'lodash';
 import interpolation from './interpolation';
+import Gradient from './gradient';
 
 const COLOR_REGEX = /^#([A-Fa-f0-9]{3}|[A-Fa-f0-9]{4}|[A-Fa-f0-9]{6}|[A-Fa-f0-9]{8})$/;
 
-const CURVES = Object.keys(interpolation.curves);
-const COLORSPACES = Object.keys(interpolation.COLORSPACE_NAMES);
+const CURVES = Object.keys(interpolation.CURVES);
 
 export const EFFECTS = {
     sketch: {
@@ -313,14 +313,14 @@ export const LAYERS = {
                 y: checkLength(data, [...path, 'y'], 0, 96),
                 rotation: checkValue(data, [...path, 'rotation'], 0, isNumber),
                 count: checkValue(data, [...path, 'count'], 3, isInteger),
-                radialMode: checkValue(data, [...path, 'radialMode'], 'radiusspread', isEnum("radiusspread", "innerouter")),
+                radialMode: checkValue(data, [...path, 'radialMode'], 'innerouter', isEnum("radiusspread", "innerouter")),
                 inner: checkLengthWithScale(data, [...path, 'inner'], 1, 96, true, isNumber),
                 outer: checkLengthWithScale(data, [...path, 'outer'], 2, 96, true, isNumber),
                 radius: checkLengthWithScale(data, [...path, 'radius'], 1.5, 96, true, isNumber),
                 spread: checkLengthWithScale(data, [...path, 'spread'], 0.5, 96, true, isNumber),
                 thetaMode: checkValue(data, [...path, 'thetaMode'], 'incremental', isEnum("incremental", "startstop")),
                 step: checkValue(data, [...path, 'step'], 20, isNumber),
-                skipLast: checkValue(data, [...path, 'skipLast'], false, isBoolean),
+                toExtent: checkValue(data, [...path, 'toExtent'], false, isBoolean),
                 coverage: {
                     start: checkValue(data, [...path, 'coverage', 'start'], 0, isNumber),
                     end: checkValue(data, [...path, 'coverage', 'end'], 360, isNumber),
@@ -332,18 +332,9 @@ export const LAYERS = {
                 radialCurve: checkValue(data, [...path, 'radialCurve'], "linear", isEnum(...CURVES)),
                 scaleCurve: checkValue(data, [...path, 'scaleCurve'], "linear", isEnum(...CURVES)),
                 thetaCurve: checkValue(data, [...path, 'thetaCurve'], "linear", isEnum(...CURVES)),
-                colorCurveStroke: checkValue(data, [...path, 'colorCurveStroke'], "linear", isEnum(...CURVES)),
-                colorSpaceStroke: checkValue(data, [...path, 'colorSpaceStroke'], "rgb", isEnum(...COLORSPACES)),
-                colorFactorStroke: {
-                    start: checkValue(data, [...path, 'colorFactorStroke', 'start'], null, isNull, isColor),
-                    end: checkValue(data, [...path, 'colorFactorStroke', 'end'], null, isNull, isColor)
-                },
-                colorCurveFill: checkValue(data, [...path, 'colorCurveFill'], "linear", isEnum(...CURVES)),
-                colorSpaceFill: checkValue(data, [...path, 'colorSpaceFill'], "rgb", isEnum(...COLORSPACES)),
-                colorFactorFill: {
-                    start: checkValue(data, [...path, 'colorFactorFill', 'start'], null, isNull, isColor),
-                    end: checkValue(data, [...path, 'colorFactorFill', 'end'], null, isNull, isColor)
-                },
+                colorFactorInherit: checkValue(data, [...path, 'colorFactorInherit'], false, isBoolean),
+                colorFactorFill: checkValue(data, [...path, 'colorFactorFill'], "#ffffffff 0,rgb linear,#000000ff 1", isGradient),
+                colorFactorStroke: checkValue(data, [...path, 'colorFactorStroke'], "#ffffffff 0,rgb linear,#000000ff 1", isGradient),
                 layers: checkLayers(data, [...path, 'layers'])
             }
         }
@@ -372,18 +363,9 @@ export const LAYERS = {
                 },
                 scaleCurve: checkValue(data, [...path, 'scaleCurve'], "linear", isEnum(...CURVES)),
                 thetaCurve: checkValue(data, [...path, 'thetaCurve'], "linear", isEnum(...CURVES)),
-                colorCurveStroke: checkValue(data, [...path, 'colorCurveStroke'], "linear", isEnum(...CURVES)),
-                colorSpaceStroke: checkValue(data, [...path, 'colorSpaceStroke'], "rgb", isEnum(...COLORSPACES)),
-                colorFactorStroke: {
-                    start: checkValue(data, [...path, 'colorFactorStroke', 'start'], null, isNull, isColor),
-                    end: checkValue(data, [...path, 'colorFactorStroke', 'end'], null, isNull, isColor)
-                },
-                colorCurveFill: checkValue(data, [...path, 'colorCurveFill'], "linear", isEnum(...CURVES)),
-                colorSpaceFill: checkValue(data, [...path, 'colorSpaceFill'], "rgb", isEnum(...COLORSPACES)),
-                colorFactorFill: {
-                    start: checkValue(data, [...path, 'colorFactorFill', 'start'], null, isNull, isColor),
-                    end: checkValue(data, [...path, 'colorFactorFill', 'end'], null, isNull, isColor)
-                },
+                colorFactorInherit: checkValue(data, [...path, 'colorFactorInherit'], false, isBoolean),
+                colorFactorFill: checkValue(data, [...path, 'colorFactorFill'], "#ffffffff 0,rgb linear,#000000ff 1", isGradient),
+                colorFactorStroke: checkValue(data, [...path, 'colorFactorStroke'], "#ffffffff 0,rgb linear,#000000ff 1", isGradient),
                 layers: checkLayers(data, [...path, 'layers'])
             }
         }
@@ -461,6 +443,7 @@ export const LAYERS = {
 }
 
 export const isString = a => typeof a === "string" ? a : undefined;
+export const isGradient = a => typeof a === "string" ? (Gradient.fromString(a)?.toString() ?? undefined) : undefined;
 export const isLiteral = (c) => { return a => a === c ? a : undefined; };
 export const isNull = (a) => { return a === null ? a : typeof a === 'string' && a === '' ? null : undefined }
 export const isColor = a => typeof a === "string" && COLOR_REGEX.test(a) ? a : undefined;

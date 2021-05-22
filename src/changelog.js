@@ -1,4 +1,9 @@
 const changelog = [
+    { version: "0.7.0", items: [
+        "Completely overhauled the color interpolation system. Yay Gradients! This may be a breaking change.",
+        "Fixed a bug in Radial Array where it was rotated 180-degrees from literally *everything* else. This may also be a breaking change.",
+        "Fixed some things the Inner/Outer vs Radius/Spread tab and made it more consistent across different elements"
+    ]},
     { version: "0.6.1", items: [
         "Better handled color interpolation on nested arrays"
     ]},

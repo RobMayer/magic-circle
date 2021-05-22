@@ -1,6 +1,4 @@
-import { useContext } from 'react';
-import { DispatchContext } from '../contexts';
-import { LayerWrapper, onChange } from '../ui/common';
+import { LayerWrapper } from '../ui/common';
 import ColorInput from '../ui/colorinput';
 import Field from '../ui/field';
 import LayerList from './layerlist';
@@ -14,13 +12,12 @@ export const Drawing = ({ path, layers, tweenScale, visible, renderAsMask, color
 }
 
 export const Interface = ({ layer, path, fromMask }) => {
-    const dispatch = useContext(DispatchContext);
     return <LayerWrapper layer={layer} path={path} name='Recolor' withVisibility>
         <Field label={"Foreground"}>
-            <ColorInput value={layer.foreground} onChange={onChange(dispatch, [...path, 'foreground'])} />
+            <ColorInput value={layer.foreground} onDispatch={[...path, 'foreground']} />
         </Field>
         <Field label={"Background"}>
-            <ColorInput value={layer.background} onChange={onChange(dispatch, [...path, 'background'])} />
+            <ColorInput value={layer.background} onDispatch={[...path, 'background']} />
         </Field>
         <Field.Heading>Sub-Layers</Field.Heading>
         <LayerList.Interface path={[...path, 'layers']} layers={layer.layers} fromMask={fromMask} />

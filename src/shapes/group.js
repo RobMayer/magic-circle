@@ -1,5 +1,3 @@
-import { useContext } from 'react';
-import { DispatchContext } from '../contexts';
 import { LayerWrapper } from '../ui/common';
 import Prefabs from '../ui/prefabs';
 import Field from '../ui/field';
@@ -17,9 +15,8 @@ export const Drawing = ({ path, posMode, x, y, r, t, rotation, masks, layers, tw
 }
 
 export const Interface = ({ layer, path, fromMask }) => {
-    const dispatch = useContext(DispatchContext);
     return <LayerWrapper layer={layer} path={path} name='Group' withVisibility>
-        <Prefabs.Transforms layer={layer} path={path} dispatch={dispatch} withRotation />
+        <Prefabs.Transforms layer={layer} path={path} withRotation />
         <Field.Heading>Sub-Layers</Field.Heading>
         <LayerList.Interface path={[...path, 'layers']} layers={layer.layers} fromMask={fromMask} />
     </LayerWrapper>

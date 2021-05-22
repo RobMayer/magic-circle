@@ -443,10 +443,13 @@ input.layername_field {
     display: grid;
     gap: 0px;
     margin: 1px;
-    grid-template-columns: 3.5em;
     grid-auto-columns: 1fr;
     grid-auto-flow: column;
     align-items: center;
+}
+
+.row.with-inline-label {
+    grid-template-columns: 6em;
 }
 
 .row_label {
@@ -505,6 +508,12 @@ input.layername_field {
     width: auto;
     align-items: stretch;
     position: relative;
+    gap: 4px;
+}
+
+.checkbox_label {
+    font-size: 10pt;
+    align-self: center;
 }
 
 .layerlist {
@@ -610,4 +619,48 @@ li {
 
 li:before {
 
+}
+
+.gradientinput {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr 1fr auto;
+    padding: 0.5em;
+}
+
+.gradientinput_canvas {
+    width: 100%;
+    height: 2em;
+    cursor: crosshair;
+}
+
+.gradientinput_selector {
+    position: relative;
+    width: 100%;
+    height: 2em;
+}
+
+.gradientinput_color {
+    width: 1em;
+    height: 1em;
+    display: grid;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    color: #888;
+    cursor: pointer;
+}
+
+.gradientinput_color.state-selected {
+    color: #fff;
+}
+
+.gradientinput_noselection {
+    font-size: 10pt;
+    font-style: italic;
+    border: 1px dashed #555;
+    padding: 12px;
+    display: grid;
+    align-items: center;
+    justify-content: center;
 }

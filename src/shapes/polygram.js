@@ -1,6 +1,4 @@
-import { useContext } from 'react';
-import { DispatchContext } from '../contexts';
-import { LayerWrapper, onChange } from '../ui/common';
+import { LayerWrapper } from '../ui/common';
 import Prefabs from '../ui/prefabs';
 import SliderInput from '../ui/sliderinput';
 import NumberInput from '../ui/numberinput';
@@ -57,33 +55,32 @@ Drawing.defaultProps = {
 }
 
 export const Interface = ({ layer, path, fromMask }) => {
-    const dispatch = useContext(DispatchContext);
     return <LayerWrapper layer={layer} path={path} name='Polygram' withVisibility>
-        <Prefabs.Length label={"Radius"} value={layer.radius} dispatch={dispatch} path={[...path, 'radius']} withScale />
+        <Prefabs.Length label={"Radius"} value={layer.radius} path={[...path, 'radius']} withScale />
         <Field label={"Scribe Mode"}>
-            <Dropdown value={layer.scribeMode} onChange={onChange(dispatch, [...path, 'scribeMode'])}>
+            <Dropdown value={layer.scribeMode} onDispatch={[...path, 'scribeMode']}>
                 <option value={'circumscribe'}>Circumscribe</option>
                 <option value={'inscribe'}>Inscribe</option>
                 <option value={'middle'}>Middle</option>
             </Dropdown>
         </Field>
         <Field label={"Sides"} columns={"2fr 1fr"}>
-            <SliderInput value={layer.sides} onChange={onChange(dispatch, [...path, 'sides'])} min={3} max={24} step={1} />
-            <NumberInput value={layer.sides} onChange={onChange(dispatch, [...path, 'sides'])} min={3} max={24} step={1} />
+            <SliderInput value={layer.sides} onDispatch={[...path, 'sides']} min={3} max={24} step={1} />
+            <NumberInput value={layer.sides} onDispatch={[...path, 'sides']} min={3} max={24} step={1} />
         </Field>
         <Field label={"Skip"} columns={"2fr 1fr"}>
-            <SliderInput value={layer.skip} onChange={onChange(dispatch, [...path, 'skip'])} min={0} max={Math.ceil(layer.sides / 2) - 2} step={1} />
-            <NumberInput value={layer.skip} onChange={onChange(dispatch, [...path, 'skip'])} min={0} max={Math.ceil(layer.sides / 2) - 2} step={1} />
+            <SliderInput value={layer.skip} onDispatch={[...path, 'skip']} min={0} max={Math.ceil(layer.sides / 2) - 2} step={1} />
+            <NumberInput value={layer.skip} onDispatch={[...path, 'skip']} min={0} max={Math.ceil(layer.sides / 2) - 2} step={1} />
         </Field>
         <Field label={"Distribution"}>
-            <Dropdown value={layer.thetaCurve} onChange={onChange(dispatch, [...path, 'thetaCurve'])}>
-                {Object.keys(Interpolation.curves).map((curve) => {
-                    return <option key={curve} value={curve}>{curve}</option>
+            <Dropdown value={layer.thetaCurve} onDispatch={[...path, 'thetaCurve']}>
+                {Object.entries(Interpolation.CURVE_NAMES).map(([k, v]) => {
+                    return <option key={k} value={k}>{v}</option>
                 })}
             </Dropdown>
         </Field>
-        <Prefabs.Transforms layer={layer} path={path} dispatch={dispatch} withRotation />
-        <Prefabs.Appearance layer={layer} path={path} dispatch={dispatch} withFill withStroke fromMask={fromMask} />
+        <Prefabs.Transforms layer={layer} path={path} withRotation />
+        <Prefabs.Appearance layer={layer} path={path} withFill withStroke fromMask={fromMask} />
     </LayerWrapper>
 }
 

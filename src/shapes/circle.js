@@ -1,5 +1,3 @@
-import { useContext } from 'react';
-import { DispatchContext } from '../contexts';
 import { LayerWrapper } from '../ui/common';
 import Prefabs from '../ui/prefabs';
 
@@ -26,11 +24,10 @@ export const Drawing = ({ path, posMode, x, y, r, t, radius, fill, stroke, tween
 }
 
 export const Interface = ({ layer, path, fromMask }) => {
-    const dispatch = useContext(DispatchContext);
     return <LayerWrapper layer={layer} path={path} name='Circle' withVisibility>
-        <Prefabs.Length label={"Radius"} value={layer.radius} dispatch={dispatch} path={[...path, 'radius']} min={0} withScale />
-        <Prefabs.Transforms layer={layer} path={path} dispatch={dispatch} />
-        <Prefabs.Appearance layer={layer} path={path} dispatch={dispatch} withFill withStroke fromMask={fromMask} />
+        <Prefabs.Length label={"Radius"} value={layer.radius} path={[...path, 'radius']} min={0} withScale />
+        <Prefabs.Transforms layer={layer} path={path} />
+        <Prefabs.Appearance layer={layer} path={path} withFill withStroke fromMask={fromMask} />
     </LayerWrapper>
 }
 

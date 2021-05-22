@@ -1,6 +1,6 @@
 import { useContext } from 'react';
 import { DispatchContext } from '../contexts';
-import { LayerWrapper, onValue } from '../ui/common';
+import { LayerWrapper } from '../ui/common';
 import Prefabs from '../ui/prefabs';
 import Field from '../ui/field';
 import LayerList from './layerlist';
@@ -15,7 +15,7 @@ const NewEffect = ({ path }) => {
     return <div className="newlayer">
         {Object.entries(EFFECTS).map(([ type, { term, validate, warning } ]) => {
             const wrn = warning ? <Icon.WARNING className={'newlayer_warning'} tooltip={warning} /> : null;
-            return <button className='good' key={type} onClick={(e) => { console.log(path); dispatch({ action: "edit", path, value: validate({}, []) }); }}>{wrn}{term}</button>
+            return <button className='good' key={type} onClick={(e) => { dispatch({ action: "edit", path, value: validate({}, []) }); }}>{wrn}{term}</button>
         })}
     </div>
 }
@@ -46,7 +46,7 @@ export const Interface = ({ layer, path, fromMask }) => {
     return <LayerWrapper layer={layer} path={path} name='Effect' withVisibility>
         <Prefabs.Transforms layer={layer} path={path} dispatch={dispatch} withRotation />
         <Field label={"Show Effect"} inlineLabel>
-            <Checkbox value={layer.showEffect} onChange={onValue(dispatch, [...path, 'showEffect'])} />
+            <Checkbox value={layer.showEffect} onDispatch={dispatch} path={[...path, 'showEffect']} />
         </Field>
         {
             layer.definition === null ? <NewEffect path={[...path, 'definition']} /> : <Effect.Interface path={[...path, 'definition']} definition={layer.definition} />
