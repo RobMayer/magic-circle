@@ -28,6 +28,9 @@ input[type=text] {
 
 select {
     padding: 2px 0;
+    min-width: 0;
+    width: auto;
+    max-width: auto;
 }
 
 textarea {
@@ -380,6 +383,7 @@ input.layername_field {
     grid-template-columns: 1fr;
     padding: 8px;
     gap: 8px 0;
+    width: 100%;
 }
 
 .field {
@@ -448,8 +452,8 @@ input.layername_field {
     align-items: center;
 }
 
-.row.with-inline-label {
-    grid-template-columns: 6em;
+.row.with-label {
+    grid-template-columns: 3em;
 }
 
 .row_label {
@@ -509,6 +513,7 @@ input.layername_field {
     align-items: stretch;
     position: relative;
     gap: 4px;
+    min-width: 0;
 }
 
 .checkbox_label {
