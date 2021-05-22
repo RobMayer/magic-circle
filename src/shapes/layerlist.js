@@ -16,7 +16,6 @@ const NewLayer = ({ path }) => {
             <div className='newlayeroptions'>
                 <div></div>
                 <button className='good-symbol' disabled={clipboard === null} onClick={(e) => {
-                    console.log(path, clipboard);
                     dispatch({ action: "append", path, value: cloneDeep(clipboard) });
                     setIsOpen(false);
                 }}><Icon.PASTE /></button>

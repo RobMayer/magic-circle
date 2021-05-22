@@ -36,7 +36,6 @@ export const Drawing = ({ path, posMode, x, y, r, t, rotation, radialMode, radiu
 }
 
 export const Interface = ({ layer, path, fromMask }) => {
-    console.log(path);
     return <LayerWrapper layer={layer} path={path} name='Arc' withVisibility>
         <Prefabs.Length label={"Radius"} value={layer.radius} path={[...path, 'radius']} min={0} withScale />
         <Field label={"Start θ"} tooltip={"Start Angle"}>

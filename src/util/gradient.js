@@ -156,14 +156,14 @@ class Gradient {
         segmentLeft = segmentLeft ?? this.getSegmentAt(position) ?? { curve: "linear", space: "rgb" };
         segmentRight = segmentRight ?? this.getSegmentAt(position) ?? { curve: "linear", space: "rgb" };
         const [after, before] = this.getIndicesAt(position);
-        if (before === 0) {
+        if (after === null) {
             this.#colors.unshift( { value, position } );
             this.#segments.unshift( { space: segmentRight.space, curve: segmentRight.curve } );
             return 0;
-        } else if (after === this.#colors.length) {
+        } else if (before === null) {
             this.#colors.push( { value, position } );
             this.#segments.push( { space: segmentLeft.space, curve: segmentLeft.curve } );
-            return this.#colors.length;
+            return this.#colors.length - 1;
         } else {
             this.#colors.splice(before, 0, { value, position });
             const cur = [...this.#segments];
@@ -193,8 +193,10 @@ class Gradient {
 
     getIndicesAt = (v) => {
         if (this.#colors.length === 1) { return [0, 1] }
-        if (v <= 0) { return [0, 1]; }
-        if (v >= 1) { return [this.#colors.length - 1, this.#colors.length]; }
+        if (v < 0) { return [null, 0]; }
+        if (v > 1) { return [this.#colors.length - 1, null]; }
+        if (v < this.#colors[0].position) { return [null, 0] }
+        if (v > this.#colors[this.#colors.length - 1].position) { return [this.#colors.length - 1, null] }
         const si = this.#colors.reduce((acc, { position }, i) => {
             if (acc !== null) { return acc; }
             if (v <= position) { return i; }
@@ -252,7 +254,6 @@ class Gradient {
     }
 
     setSegmentCurve = (i, curve) => {
-        console.log(curve);
         if (i < this.#segments.length && i >= 0 && CURVES.includes(curve)) {
             this.#segments[i] = { ...(this.#segments?.[i] ?? {}), curve };
         }

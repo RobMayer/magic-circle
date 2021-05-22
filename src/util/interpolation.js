@@ -366,7 +366,7 @@ export const CURVE_NAMES = {
     ...nameCurves("exponential", "Exponential"),
     ...nameCurves("sinic", "Sine Curve"),
     ...nameCurves("cosinic", "Cosine Curve"),
-    ...nameCurves("root", "Square Root")
+    ...nameCurves("rootic", "Square Root")
 }
 
 export const lerp = (t, a, b, curve = "linear") => {

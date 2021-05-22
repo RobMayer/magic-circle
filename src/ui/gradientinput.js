@@ -44,8 +44,8 @@ const GradientInput = ({ className, value, onUpdate, onDispatch }) => {
     const insert = useCallback((event) => {
         const x = (event.pageX - event.target.offsetLeft) / event.target.width;
         const n = gradient.insertAt(x);
-        setSelected(n);
         update(gradient.toString());
+        setSelected(n);
     }, [gradient, update])
 
     const remove = useCallback((n) => {

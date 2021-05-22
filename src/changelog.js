@@ -1,4 +1,8 @@
 const changelog = [
+    { version: "0.7.1", items: [
+        "Fixed a mishandling of an edge case with the gradient input.",
+        "Fixed the Square-Root distribution not being selectable."
+    ]},
     { version: "0.7.0", items: [
         "Completely overhauled the color interpolation system. Yay Gradients! This may be a breaking change.",
         "Fixed a bug in Radial Array where it was rotated 180-degrees from literally *everything* else. This may also be a breaking change.",
