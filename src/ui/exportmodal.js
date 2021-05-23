@@ -49,8 +49,8 @@ export const ExportModal = ({ isOpen, close, canvas, name }) => {
                 </Dropdown>
             </Field>
             <Field label={"Resolution"} columns={"2fr 1fr"}>
-                <NumberInput value={dimensions.dpi.value} onChange={(value) => { dispatch({ path: "dpi.value", value }) }} step={1} min={0} />
-                <Dropdown value={dimensions.dpi.unit} onChange={(value) => { dispatch({ path: "dpi.unit", value }) }} >
+                <NumberInput value={dimensions.dpi.value} onUpdate={(value) => { dispatch({ path: "dpi.value", value }) }} step={1} min={0} />
+                <Dropdown value={dimensions.dpi.unit} onUpdate={(value) => { dispatch({ path: "dpi.unit", value }) }} >
                     <option value={96}>in</option>
                     <option value={96 / 25.4}>mm</option>
                     <option value={96 / 2.54}>cm</option>
