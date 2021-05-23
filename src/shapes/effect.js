@@ -45,8 +45,8 @@ export const Interface = ({ layer, path, fromMask }) => {
     const dispatch = useContext(DispatchContext);
     return <LayerWrapper layer={layer} path={path} name='Effect' withVisibility>
         <Prefabs.Transforms layer={layer} path={path} dispatch={dispatch} withRotation />
-        <Field label={"Show Effect"} inlineLabel>
-            <Checkbox value={layer.showEffect} onDispatch={dispatch} path={[...path, 'showEffect']} />
+        <Field>
+            <Checkbox value={layer.showEffect} onDispatch={[...path, 'showEffect']} label={"Show Effect"} />
         </Field>
         {
             layer.definition === null ? <NewEffect path={[...path, 'definition']} /> : <Effect.Interface path={[...path, 'definition']} definition={layer.definition} />
