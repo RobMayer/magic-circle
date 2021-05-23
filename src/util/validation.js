@@ -328,7 +328,6 @@ export const LAYERS = {
                 },
                 scaleFactor: checkValue(data, [...path, 'scaleFactor'], "1 0,linear,1 1", isSpline),
                 radialCurve: checkValue(data, [...path, 'radialCurve'], "linear", isEnum(...CURVES)),
-                scaleCurve: checkValue(data, [...path, 'scaleCurve'], "linear", isEnum(...CURVES)),
                 thetaCurve: checkValue(data, [...path, 'thetaCurve'], "linear", isEnum(...CURVES)),
                 colorFactorInherit: checkValue(data, [...path, 'colorFactorInherit'], false, isBoolean),
                 colorFactorFill: checkValue(data, [...path, 'colorFactorFill'], "#ffffffff 0,rgb linear,#000000ff 1", isGradient),

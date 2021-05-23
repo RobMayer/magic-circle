@@ -1,7 +1,10 @@
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, useContext } from 'react';
+import { DispatchContext } from '../contexts';
 
-const SliderInput = ({ wrapperClass, value, onUpdate, onChange, onDispatch, onBlur, path, ...props}) => {
+const SliderInput = ({ wrapperClass, value, onUpdate, onChange, onDispatch, onBlur, ...props}) => {
     const [state, setState] = useState(value);
+
+    const dispatcher = useContext(DispatchContext);
 
     useEffect(() => {
         setState(value)
@@ -19,11 +22,11 @@ const SliderInput = ({ wrapperClass, value, onUpdate, onChange, onDispatch, onBl
         if (e.target.validity.valid) {
             onUpdate?.(e.target.value);
             onChange?.(e);
-            if (onDispatch && path) {
-                onDispatch({ action: "edit", value: e.target.value, path })
+            if (onDispatch && dispatcher) {
+                dispatcher({ action: "edit", value: e.target.value, path: onDispatch })
             }
         }
-    }, [onUpdate, onChange, onDispatch, path])
+    }, [onUpdate, onChange, onDispatch, dispatcher])
 
     return <div className={`inputwrapper ${wrapperClass ?? ""}`}>
         <input {...props} type='range' value={state} onChange={update} onBlur={revert} />

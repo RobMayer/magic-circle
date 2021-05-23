@@ -1,4 +1,7 @@
 const changelog = [
+    { version: "0.8.1", items: [
+        "Fixed a bug with slider inputs."
+    ]},
     { version: "0.8.0", items: [
         "Radial Array and Vertex Array now use a new way to determine scale factor using spline interpolation (complete with a new UI for it). This is a breaking change.",
         "Fixed a bug with Radial Array toExtents option not distributing scale and color values as expected"
