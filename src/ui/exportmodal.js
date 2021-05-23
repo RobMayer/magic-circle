@@ -33,24 +33,24 @@ export const ExportModal = ({ isOpen, close, canvas, name }) => {
         </Field>
         <Field.Row>
             <Field label={"Width"} columns={"2fr 1fr"}>
-                <NumberInput value={dimensions.width.value} onChange={(e) => { dispatch({ path: "width.value", value: e.target.value }) }} />
-                <Dropdown value={dimensions.width.unit} onChange={(e) => { dispatch({ path: "width.unit", value: e.target.value }) }} >
+                <NumberInput value={dimensions.width.value} onUpdate={(value) => { dispatch({ path: "width.value", value }) }} step={0.0001} min={0} />
+                <Dropdown value={dimensions.width.unit} onUpdate={(value) => { dispatch({ path: "width.unit", value }) }} >
                     <option value={96}>in</option>
                     <option value={96 / 25.4}>mm</option>
                     <option value={96 / 2.54}>cm</option>
                 </Dropdown>
             </Field>
             <Field label={"Height"} columns={"2fr 1fr"}>
-                <NumberInput value={dimensions.height.value} onChange={(e) => { dispatch({ path: "height.value", value: e.target.value }) }} />
-                <Dropdown value={dimensions.height.unit} onChange={(e) => { dispatch({ path: "height.unit", value: e.target.value }) }} >
+                <NumberInput value={dimensions.height.value} onUpdate={(value) => { dispatch({ path: "height.value", value }) }} step={0.0001} min={0} />
+                <Dropdown value={dimensions.height.unit} onUpdate={(value) => { dispatch({ path: "height.unit", value }) }} >
                     <option value={96}>in</option>
                     <option value={96 / 25.4}>mm</option>
                     <option value={96 / 2.54}>cm</option>
                 </Dropdown>
             </Field>
             <Field label={"Resolution"} columns={"2fr 1fr"}>
-                <NumberInput value={dimensions.dpi.value} onChange={(e) => { dispatch({ path: "dpi.value", value: e.target.value }) }} />
-                <Dropdown value={dimensions.dpi.unit} onChange={(e) => { dispatch({ path: "dpi.unit", value: e.target.value }) }} >
+                <NumberInput value={dimensions.dpi.value} onChange={(value) => { dispatch({ path: "dpi.value", value }) }} step={1} min={0} />
+                <Dropdown value={dimensions.dpi.unit} onChange={(value) => { dispatch({ path: "dpi.unit", value }) }} >
                     <option value={96}>in</option>
                     <option value={96 / 25.4}>mm</option>
                     <option value={96 / 2.54}>cm</option>
