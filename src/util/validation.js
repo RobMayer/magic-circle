@@ -1,6 +1,7 @@
 import { get } from 'lodash';
 import interpolation from './interpolation';
 import Gradient from './gradient';
+import Spline from './spline';
 
 const COLOR_REGEX = /^#([A-Fa-f0-9]{3}|[A-Fa-f0-9]{4}|[A-Fa-f0-9]{6}|[A-Fa-f0-9]{8})$/;
 
@@ -325,10 +326,7 @@ export const LAYERS = {
                     start: checkValue(data, [...path, 'coverage', 'start'], 0, isNumber),
                     end: checkValue(data, [...path, 'coverage', 'end'], 360, isNumber),
                 },
-                scaleFactor: {
-                    start: checkValue(data, [...path, 'scaleFactor', 'start'], 1, isNumber),
-                    end: checkValue(data, [...path, 'scaleFactor', 'end'], 1, isNumber),
-                },
+                scaleFactor: checkValue(data, [...path, 'scaleFactor'], "1 0,linear,1 1", isSpline),
                 radialCurve: checkValue(data, [...path, 'radialCurve'], "linear", isEnum(...CURVES)),
                 scaleCurve: checkValue(data, [...path, 'scaleCurve'], "linear", isEnum(...CURVES)),
                 thetaCurve: checkValue(data, [...path, 'thetaCurve'], "linear", isEnum(...CURVES)),
@@ -357,11 +355,7 @@ export const LAYERS = {
                 radius: checkPolygonRadius(data, [...path, 'radius'], 1.5, 96, true, isGTE(0)),
                 scribeMode: checkValue(data, [...path, "scribeMode"], "circumscribe", isLegacy([...path, "radius", "scribe"]), isEnum("circumscribe", "inscribe", "middle")),
                 count: checkValue(data, [...path, 'count'], 5, isInteger),
-                scaleFactor: {
-                    start: checkValue(data, [...path, 'scaleFactor', 'start'], 1, isNumber),
-                    end: checkValue(data, [...path, 'scaleFactor', 'end'], 1, isNumber),
-                },
-                scaleCurve: checkValue(data, [...path, 'scaleCurve'], "linear", isEnum(...CURVES)),
+                scaleFactor: checkValue(data, [...path, 'scaleFactor'], "1 0,linear,1 1", isSpline),
                 thetaCurve: checkValue(data, [...path, 'thetaCurve'], "linear", isEnum(...CURVES)),
                 colorFactorInherit: checkValue(data, [...path, 'colorFactorInherit'], false, isBoolean),
                 colorFactorFill: checkValue(data, [...path, 'colorFactorFill'], "#ffffffff 0,rgb linear,#000000ff 1", isGradient),
@@ -444,6 +438,7 @@ export const LAYERS = {
 
 export const isString = a => typeof a === "string" ? a : undefined;
 export const isGradient = a => typeof a === "string" ? (Gradient.fromString(a)?.toString() ?? undefined) : undefined;
+export const isSpline = a => typeof a === "string" ? (Spline.fromString(a)?.toString() ?? undefined) : undefined;
 export const isLiteral = (c) => { return a => a === c ? a : undefined; };
 export const isNull = (a) => { return a === null ? a : typeof a === 'string' && a === '' ? null : undefined }
 export const isColor = a => typeof a === "string" && COLOR_REGEX.test(a) ? a : undefined;

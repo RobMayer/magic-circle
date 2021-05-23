@@ -7,9 +7,11 @@ import Checkbox from '../ui/checkbox';
 import Field from '../ui/field';
 import Dropdown from '../ui/dropdown';
 import GradientInput from '../ui/gradientinput';
+import SplineInput from '../ui/splineinput';
 import LayerList from './layerlist';
 import Interpolation from '../util/interpolation';
 import Gradient from '../util/gradient';
+import Spline from '../util/spline';
 
 const getRadius = (radius, scribe, sides) => {
     switch (scribe) {
@@ -31,16 +33,17 @@ export const Drawing = ({ path, posMode, x, y, r, t, rotation, radius, scribeMod
     const rad = getRadius(radius.value * radius.unit * (radius.useScale ? (tweenScale ?? 1) : 1), scribeMode, count);
 
     const children = range(count).map((n) => {
-        const coeff = Interpolation.lerp(Interpolation.delerp(n, 0, count), 0, 360, thetaCurve) - 180;
-        const s = Interpolation.lerp(Interpolation.delerp(n, 0, count), 1 * scaleFactor.start, 1 * scaleFactor.end, scaleCurve);
+        const coeff = Interpolation.delerp(n, 0, count);
+        const rot = Interpolation.lerp(coeff, 0, 360, thetaCurve) - 180;
+        const s = Spline.fromString(scaleFactor).getValueAt(coeff);
         const c = {
-            stroke: Gradient.fromString(colorFactorStroke).getColorAt(Interpolation.delerp(n, 0, count)),
-            fill: Gradient.fromString(colorFactorFill).getColorAt(Interpolation.delerp(n, 0, count))
+            stroke: Gradient.fromString(colorFactorStroke).getColorAt(coeff),
+            fill: Gradient.fromString(colorFactorFill).getColorAt(coeff)
         }
         const nested = layers.map((layer, i) => {
             return <Shape.Drawing key={i} {...layer} path={[...path, 'layers', i]} tweenScale={s} tweenColors={colorFactorInherit ? (tweenColors ?? c) : c} renderAsMask={renderAsMask} colors={colors} />
         });
-        return <g key={n} style={{ transform: `rotate(${coeff}deg) translate(0px, ${rad}px)`}}>{nested}</g>
+        return <g key={n} style={{ transform: `rotate(${rot}deg) translate(0px, ${rad}px)`}}>{nested}</g>
     })
     return <g style={{ transform: `translate(${cx}px,${-cy}px) rotate(${rotation}deg)`}}>{children}</g>
 }
@@ -66,17 +69,9 @@ export const Interface = ({ layer, path, fromMask }) => {
             </Dropdown>
         </Field>
         <Field.Group label={"Sub-Layer Interpolation"}>
-            <Field.Row label={"Scale"}>
-                <Field label={"Start"}><NumberInput value={layer.scaleFactor.start} onDispatch={[...path, 'scaleFactor', 'start']} step={0.001} min={0} /></Field>
-                <Field label={"End"}><NumberInput value={layer.scaleFactor.end} onDispatch={[...path, 'scaleFactor', 'end']} step={0.001} min={0} /></Field>
-                <Field label={"Distribution"}>
-                    <Dropdown value={layer.scaleCurve} onDispatch={[...path, 'scaleCurve']}>
-                        {Object.entries(Interpolation.CURVE_NAMES).map(([k, v]) => {
-                            return <option key={k} value={k}>{v}</option>
-                        })}
-                    </Dropdown>
-                </Field>
-            </Field.Row>
+            <Field label={"Scale"}>
+                <SplineInput value={layer.scaleFactor} onDispatch={[...path, 'scaleFactor']} />
+            </Field>
             <Field label={"Stroke"} columns={"1fr min-content"}>
                 <GradientInput value={layer.colorFactorStroke} onDispatch={[...path, 'colorFactorStroke']} />
             </Field>

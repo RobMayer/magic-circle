@@ -12,7 +12,7 @@ import Icon from './ui/icon';
 import LogModal from './ui/logmodal';
 import ExportModal from './ui/exportmodal';
 
-const version = "0.7.2";
+const version = "0.8.0";
 
 const handleUpload = (element, file, dispatch) => {
     if (file) {

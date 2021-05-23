@@ -626,10 +626,36 @@ li:before {
 
 }
 
+.splineinput {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto;
+    padding: 0.5em;
+    gap: 1em;
+}
+
+.splineinput_canvas, .splineinput_selector {
+    width: 100%;
+    height: 6em;
+    grid-area: 1 / 1;
+    cursor: crosshair;
+    position: relative;
+}
+.splineinput_selector {
+    outline: 1px solid #444;
+}
+
+.splineinput_line {
+    stroke: #888;
+    stroke-width: 1.5px;
+    vector-effect: non-scaling-stroke;
+    fill: none;
+}
+
 .gradientinput {
     display: grid;
     grid-template-columns: 1fr;
-    grid-template-rows: 1fr 1fr auto;
+    grid-template-rows: auto auto auto;
     padding: 0.5em;
 }
 
@@ -645,7 +671,7 @@ li:before {
     height: 2em;
 }
 
-.gradientinput_color {
+.gradientinput_color, .splineinput_vert {
     width: 1em;
     height: 1em;
     display: grid;
@@ -656,11 +682,11 @@ li:before {
     cursor: pointer;
 }
 
-.gradientinput_color.state-selected {
+.gradientinput_color.state-selected, .splineinput_vert.state-selected {
     color: #fff;
 }
 
-.gradientinput_noselection {
+.gradientinput_noselection, .splineinput_noselection {
     font-size: 10pt;
     font-style: italic;
     border: 1px dashed #555;

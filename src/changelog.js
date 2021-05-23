@@ -1,4 +1,8 @@
 const changelog = [
+    { version: "0.8.0", items: [
+        "Radial Array and Vertex Array now use a new way to determine scale factor using spline interpolation (complete with a new UI for it). This is a breaking change.",
+        "Fixed a bug with Radial Array toExtents option not distributing scale and color values as expected"
+    ]},
     { version: "0.7.2", items: [
         "It'd be nice if you could change the Units on the Canvas, wouldn't it?"
     ]},

@@ -9,8 +9,10 @@ import Field from '../ui/field';
 import Dropdown from '../ui/dropdown';
 import LayerList from './layerlist';
 import GradientInput from '../ui/gradientinput';
+import SplineInput from '../ui/splineinput';
 import Interpolation from '../util/interpolation';
 import Gradient from '../util/gradient';
+import Spline from '../util/spline';
 
 export const Drawing = ({ path, posMode, x, y, r, t, rotation, radialMode, inner, outer, radius, spread, thetaMode, count, step, coverage, toExtent, layers, scaleCurve, radialCurve, thetaCurve, scaleFactor, tweenScale, tweenColors, visible, renderAsMask, colors,
     colorFactorInherit, colorFactorFill, colorFactorStroke
@@ -33,10 +35,10 @@ export const Drawing = ({ path, posMode, x, y, r, t, rotation, radialMode, inner
         const coeff = Interpolation.delerp(n, 0, count - 1);
         const cA = Interpolation.delerp(n, 0, doOverlap ? count : count - 1);
         const angle = thetaMode === "startstop" ? Interpolation.lerp(cA, 1 * coverage.start, 1 * coverage.end, thetaCurve) : step * n;
-        const s = Interpolation.lerp(coeff, 1 * scaleFactor.start, 1 * scaleFactor.end, scaleCurve);
+        const s = Spline.fromString(scaleFactor).getValueAt(cA);
         const c = {
-            stroke: Gradient.fromString(colorFactorStroke).getColorAt(Interpolation.delerp(n, 0, count)),
-            fill: Gradient.fromString(colorFactorFill).getColorAt(Interpolation.delerp(n, 0, count))
+            stroke: Gradient.fromString(colorFactorStroke).getColorAt(cA),
+            fill: Gradient.fromString(colorFactorFill).getColorAt(cA)
         }
         const rad = Interpolation.lerp(coeff, rI, rO, radialCurve);
         const nested = layers.map((layer, i) => {
@@ -106,17 +108,9 @@ export const Interface = ({ layer, path, fromMask }) => {
             </Tabs.Option>
         </Tabs>
         <Field.Group label={"Sub-Layer Interpolation"}>
-            <Field.Row label={"Scale"}>
-                <Field label={"Start"}><NumberInput value={layer.scaleFactor.start} onDispatch={[...path, 'scaleFactor', 'start']} step={0.001} min={0} /></Field>
-                <Field label={"End"}><NumberInput value={layer.scaleFactor.end} onDispatch={[...path, 'scaleFactor', 'end']} step={0.001} min={0} /></Field>
-                <Field label={"Distribution"}>
-                    <Dropdown value={layer.scaleCurve} onDispatch={[...path, 'scaleCurve']}>
-                        {Object.entries(Interpolation.CURVE_NAMES).map(([k, v]) => {
-                            return <option key={k} value={k}>{v}</option>
-                        })}
-                    </Dropdown>
-                </Field>
-            </Field.Row>
+            <Field label={"Scale"}>
+                <SplineInput value={layer.scaleFactor} onDispatch={[...path, 'scaleFactor']} />
+            </Field>
             <Field label={"Stroke"} columns={"1fr min-content"}>
                 <GradientInput value={layer.colorFactorStroke} onDispatch={[...path, 'colorFactorStroke']} />
             </Field>

@@ -20,6 +20,7 @@ export const TWITCH = ({ className, tooltip }) => { return <div className={`icon
 export const TWITTER = ({ className, tooltip }) => { return <div className={`icon ${className ?? ""}`} title={tooltip}><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 90 90"><g><path d="M82,22.05a30.31,30.31,0,0,1-8.72,2.39A15.21,15.21,0,0,0,80,16a30.41,30.41,0,0,1-9.64,3.68A15.19,15.19,0,0,0,44.44,33.57,43.1,43.1,0,0,1,13.15,17.71,15.2,15.2,0,0,0,17.85,38,15.12,15.12,0,0,1,11,36.08,15.19,15.19,0,0,0,23.15,51.16a15.22,15.22,0,0,1-6.86.26A15.19,15.19,0,0,0,30.48,62,30.53,30.53,0,0,1,8,68.25a43,43,0,0,0,23.27,6.82c28.19,0,44.11-23.81,43.15-45.16A30.91,30.91,0,0,0,82,22.05Z"/></g></svg></div> };
 export const TRASH = ({ className, tooltip }) => { return <div className={`icon ${className ?? ""}`} title={tooltip}><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 90 90"><g><path d="M14.38,21.48V17.66a3.27,3.27,0,0,1,3.28-3.28H33l1.29-2.56A3.24,3.24,0,0,1,37.18,10H52.81a3.28,3.28,0,0,1,2.94,1.82L57,14.38H72.34a3.27,3.27,0,0,1,3.28,3.28v3.83A1.65,1.65,0,0,1,74,23.13H16A1.65,1.65,0,0,1,14.38,21.48Zm56.87,7.66v44.3A6.56,6.56,0,0,1,64.69,80H25.31a6.56,6.56,0,0,1-6.56-6.56V29.14a1.65,1.65,0,0,1,1.64-1.64H69.61A1.65,1.65,0,0,1,71.25,29.14Zm-37.19,9.3a2.19,2.19,0,1,0-4.37,0V69.06a2.19,2.19,0,1,0,4.37,0Zm13.12,0a2.19,2.19,0,0,0-4.37,0V69.06a2.19,2.19,0,0,0,4.38,0Zm13.12,0a2.19,2.19,0,1,0-4.37,0V69.06a2.19,2.19,0,1,0,4.37,0Z"/></g></svg></div> };
 export const WARNING = ({ className, tooltip }) => { return <div className={`icon ${className ?? ""}`} title={tooltip}><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 90 90"><g><path d="M54,14.69H36l-26,45,9,15.64H71l9-15.64ZM41.11,25h7.78V48.31H41.11ZM45,65A5.06,5.06,0,1,1,50.06,60,5.06,5.06,0,0,1,45,65Z"/></g></svg></div> };
+export const DOT = ({ className, tooltip }) => { return <div className={`icon ${className ?? ""}`} title={tooltip}><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 90 90"><g><circle cx="45" cy="45" r="27"/></g></svg></div> };
 
 
 const output = {
@@ -44,6 +45,7 @@ const output = {
     TWITCH,
     TWITTER,
     TRASH,
-    WARNING
+    WARNING,
+    DOT
 }
 export default output;
